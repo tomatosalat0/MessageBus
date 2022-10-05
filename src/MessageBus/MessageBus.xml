@@ -267,6 +267,13 @@
             Will be <c>null</c> if no causation id exists.
             </summary>
         </member>
+        <member name="M:MessageBus.MessageId.Parse(System.String)">
+            <summary>
+            Parses the provided <paramref name="value"/> and converts it to a <see cref="T:MessageBus.MessageId"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="value"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">Is thrown if <paramref name="value"/> is not a valid message id.</exception>
+        </member>
         <member name="P:MessageBus.Messaging.IMessage.Payload">
             <summary>
             The payload of the message.

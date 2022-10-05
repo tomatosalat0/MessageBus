@@ -1,3 +1,4 @@
+
 # MessageBus
 This library is a simple MessageBus implementation in .NET. The implementation uses an InMemory implementation for the message broker itself. The broker can be replaced by implementing a custom `IMessageBroker`. 
 
@@ -101,12 +102,14 @@ bus.RegisterCommandHandler(
 ```
 
 ### Message instances
-The system will not (de)serialize the received messages by itself at the moment. Instead the same reference of the message is forwarded to the handler. This currently allows you to basically add anything you want to the message body itself. However this is not recommended at all.  The following recommendation should be used for all messages: 
+The system will not (de)serialize the received messages by itself by default. Instead the same reference of the message is forwarded to the handler. This allows you to basically add anything you want to the message body itself. However this is not recommended at all.  The following recommendation should be used for all messages: 
 * All your message body properties should be serializable.
 * Do not pass references around, stick to simple data types like `string`, `int` or `IReadOnlyDictionary` which are serializable to a JSON. That decreases coupling between system.
 * Messages should be immutable and must be completely loaded when broadcasting them. Do not use any `Lazy<T>` property etc.
 * If you keep your message immutable, you don't have to care about locks etc.
 * While a message can be any object, it is wise to create a dedicated class which only contains the properties you actually need within the event/command/query/...
+
+If you want to send messages across modules without using shared message classes, you need to setup serialization. See the [Message Serialization](#message-serialization) topic for details.
 
 ### Timeouts
 Every message types which returns a result has a `CancellationToken` parameter. You should not use `CancellationToken.None` here. If no handler is registered for your message, each of these messages will not return until the provided cancellation token has timed out - which will be never in case of `CancellationToken.None` or `default(CancellationToken)`. You should define a good timeout for each query and define that explicitly within your code. 
@@ -181,6 +184,49 @@ bus.RegisterCommandHandler(handler);
 handler.Dispose();
 
 ```
+
+## Message Serialization
+By default, the `IMessageBroker` will not serialize or deserialize the messages to raw data structure. To enable that feature, you just have to do the following steps:
+* Include one of the currently implemented serializer projects (which is only one at the moment: `MessageBus.Serialization.Json`) to your project.
+* Configuration serialization directly after creating the `IMessageBroker` instance
+* Done
+
+### Example
+The following code example creates an `IMessageBus` instance which uses an an `IMessageBroker` which serializes all messages to and from a JSON byte array automatically. Compare the example with the simple introduction example from [here](#2-register-an-event-handler) to see the difference.
+
+```cs
+using IMessageBus bus = new MessageBrokerMessageBus(
+    MemoryMessageBrokerBuilder.InProcessBroker()
+        .UseMessageSerialization(new JsonSerializer()), 
+    NoExceptionNotification.Instance
+);
+```
+After adding this line, every message will get serialized to a byte[] array internally before publishing and returned to a typed object before handling the message. 
+
+The class uses the built-in`System.Text.Json.JsonSerializer`. If you use this serializer, please make sure to annotate your properties within the message implementations properly.
+
+Example:
+```cs
+[Topic("Events/MyEvent")]
+private class MyEvent : IMessageEvent
+{
+    public MyEvent(int index)
+    {
+        Index = index;
+    }
+
+    [JsonInclude]
+    public int Index { get; private init; }
+
+    [JsonInclude]
+    public MessageId MessageId { get; private init; } = MessageId.NewId();
+}
+```
+
+### Creating your own serializer
+You can create your own custom serializer quite easily. All you need to do is to implement the interface `IMessageSerializer` defined in `MessageBus.Serialization`. 
+
+If you are unsure about it, don't be afraid to look into the projects `MessageBus.Serialization` and `MessageBus.Serialization.Json` to get an idea how the JSON serializer was implemented. 
 
 ## Concepts
 ### Message Types

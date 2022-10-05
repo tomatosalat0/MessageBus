@@ -78,5 +78,39 @@ namespace MessageBus.Tests.UnitTests
             Assert.IsFalse(messages.Add(idA));
             Assert.IsFalse(messages.Add(idB));
         }
+
+        [TestMethod]
+        public void ParsingInvalidMessageWllThrowAnException()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => MessageId.Parse(null));
+            Assert.ThrowsException<ArgumentException>(() => MessageId.Parse(string.Empty));
+            Assert.ThrowsException<ArgumentException>(() => MessageId.Parse("->"));
+            Assert.ThrowsException<ArgumentException>(() => MessageId.Parse("test->"));
+            Assert.ThrowsException<ArgumentException>(() => MessageId.Parse("->test"));
+        }
+
+        [TestMethod]
+        public void ParsingMessageIdHandlesNoCausationId()
+        {
+            MessageId message = new MessageId("<message>");
+
+            string asString = message.ToString();
+            MessageId parsed = MessageId.Parse(asString);
+
+            Assert.AreEqual(message.Value, parsed.Value);
+            Assert.IsNull(parsed.CausationId);
+        }
+
+        [TestMethod]
+        public void ParsingMessageIdHandlesCausationId()
+        {
+            MessageId message = MessageId.CausedBy(new MessageId("<causation>"));
+
+            string asString = message.ToString();
+            MessageId parsed = MessageId.Parse(asString);
+
+            Assert.AreEqual(message.Value, parsed.Value);
+            Assert.AreEqual(message.CausationId, parsed.CausationId);
+        }
     }
 }
