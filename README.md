@@ -19,7 +19,7 @@ By defining an event, you specify which parameters are passed in that event.
 [Topic("Events/MyEvent")]
 public class MyEvent : IMessageEvent
 {
-	public MessageId MessageId { get; } = MessageId.NewId();
+    public MessageId MessageId { get; } = MessageId.NewId();
 }
 ```
 Each event must implement the `IMessageEvent` interface which adds one property: `MessageId`. This id helps us to uniquely identify the message later on.  
@@ -81,13 +81,13 @@ Example:
 ```cs
 public class MyCommand : IMessageCommand
 {
-	public MessageId MessageId { get; } = MessageId.NewId();
+    public MessageId MessageId { get; } = MessageId.NewId();
 }
 
 public class MyCommandHandler : IAsyncMessageCommandHandler<MyCommand>
 {
-	public Task HandleAsync(MyCommand command)
-	{
+    public Task HandleAsync(MyCommand command)
+    {
         // this method will get executed in parallel if muliple commands are
         // waiting for execution.
     }
