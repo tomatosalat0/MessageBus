@@ -222,7 +222,7 @@
             <inheritdoc/>
         </member>
         <member name="M:MessageBus.MessageBusPublishTimeoutExtensions.FireCommandAndWait``1(MessageBus.IMessageBusPublishing,``0,System.TimeSpan)">
-            <summary>synchronious 
+            <summary>
             Executes the provided <paramref name="command"/> and waits for its execution. If the execution took longer than
             the provided <paramref name="timeout"/>, an <see cref="T:System.OperationCanceledException"/> will get thrown.
             See <see cref="M:MessageBus.IMessageBusPublishing.FireCommandAndWait``1(``0,System.Threading.CancellationToken)"/> for details.
