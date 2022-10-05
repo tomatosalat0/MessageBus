@@ -6,7 +6,7 @@ namespace MessageBus
 {
     public static class MessageBusPublishTimeoutExtensions
     {
-        /// <summary>synchronious 
+        /// <summary>
         /// Executes the provided <paramref name="command"/> and waits for its execution. If the execution took longer than
         /// the provided <paramref name="timeout"/>, an <see cref="OperationCanceledException"/> will get thrown.
         /// See <see cref="IMessageBusPublishing.FireCommandAndWait{TCommand}(TCommand, CancellationToken)"/> for details.
