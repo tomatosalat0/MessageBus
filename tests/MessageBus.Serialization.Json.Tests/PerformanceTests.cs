@@ -14,7 +14,7 @@ namespace MessageBus.Serialization.Json.Tests
         private IMessageBroker CreateBroker()
         {
             return MemoryMessageBrokerBuilder.InProcessBroker()
-                .UseMessageSerialization(new JsonSerializer());
+                .UseMessageSerialization(new JsonMessageSerializer());
         }
 
         [TestMethod]

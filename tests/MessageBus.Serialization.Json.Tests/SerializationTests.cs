@@ -14,7 +14,7 @@ namespace MessageBus.Serialization.Json.Tests
         {
             ManualScheduler scheduler = new ManualScheduler();
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler))
-                .UseMessageSerialization(new JsonSerializer());
+                .UseMessageSerialization(new JsonMessageSerializer());
 
             PlainMessage sendMessage = new PlainMessage("Hello World");
 
@@ -51,7 +51,7 @@ namespace MessageBus.Serialization.Json.Tests
         {
             ManualScheduler scheduler = new ManualScheduler();
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler))
-                .UseMessageSerialization(new JsonSerializer());
+                .UseMessageSerialization(new JsonMessageSerializer());
 
             WithMessageId sendMessage = new WithMessageId("Hello World");
 

@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MessageBus.Serialization.Json
 {
-    public class JsonSerializer : IMessageSerializer
+    public class JsonMessageSerializer : IMessageSerializer
     {
         private readonly JsonSerializerOptions? _options;
 
@@ -15,18 +15,18 @@ namespace MessageBus.Serialization.Json
         }
 
         /// <summary>
-        /// Initializes the <see cref="JsonSerializer"/> with the default <see cref="JsonSerializerOptions"/>.
+        /// Initializes the <see cref="JsonMessageSerializer"/> with the default <see cref="JsonSerializerOptions"/>.
         /// </summary>
-        public JsonSerializer()
+        public JsonMessageSerializer()
         {
             _options = CreateDefaultOptions();
         }
 
         /// <summary>
-        /// Initializes the <see cref="JsonSerializer"/> with the possibility to customize the json
+        /// Initializes the <see cref="JsonMessageSerializer"/> with the possibility to customize the json
         /// configuration within the <paramref name="configuration"/> callback.
         /// </summary>
-        public JsonSerializer(Action<JsonSerializerOptions> configuration)
+        public JsonMessageSerializer(Action<JsonSerializerOptions> configuration)
         {
             _options = CreateDefaultOptions();
             configuration(_options);
