@@ -11,7 +11,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task QueryHandlerIsCalledForQueries()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             int numberOfCalls = 0;
             bus.RegisterQueryDelegate<QueryA, MessageQueryResult>(m =>
@@ -30,7 +30,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task ExceptionsInQueryWillGetThrownOnReceive()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             bus.RegisterQueryDelegate<QueryA, MessageQueryResult>(m => throw new NotSupportedException());
             QueryA query = new QueryA();
@@ -43,7 +43,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task QueryHandlerSupportsAsync()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
             using SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
             await semaphore.WaitAsync();

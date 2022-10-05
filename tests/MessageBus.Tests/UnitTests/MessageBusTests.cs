@@ -13,7 +13,7 @@ namespace MessageBus.Tests.UnitTests
         public void EventSubscriptionThrowsExceptionForInvalidEvents()
         {
             ManualScheduler scheduler = new ManualScheduler();
-            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
 
             Assert.ThrowsException<IncompleteConfigurationException>(() => bus.RegisterEventDelegate<MissingTopicEvent>((_) => { }));
             Assert.ThrowsException<IncompleteConfigurationException>(() => bus.FireEvent(new MissingTopicEvent()));
@@ -29,7 +29,7 @@ namespace MessageBus.Tests.UnitTests
         public void DisposedBusThrowsObjectDisposedException()
         {
             ManualScheduler scheduler = new ManualScheduler();
-            IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NullExceptionNotification.Instance);
+            IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
             bus.Dispose();
 
 

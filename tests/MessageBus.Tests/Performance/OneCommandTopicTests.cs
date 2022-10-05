@@ -16,7 +16,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public void MessageBusWithOneCommandTopicAndOneListener()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             RunTest(bus, numberOfSubscribers: 1);
         }
@@ -24,7 +24,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public void MessageBusWithOneCommandTopicAndFiveListeners()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             RunTest(bus, numberOfSubscribers: 5);
         }

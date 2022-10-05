@@ -32,7 +32,7 @@ After you have defined your event, you should add a handler which executes when 
 ```cs
 using IMessageBus bus = new MessageBrokerMessageBus(
     MemoryMessageBrokerBuilder.InProcessBroker(), 
-    NullExceptionNotification.Instance
+    NoExceptionNotification.Instance
 );
 bus.RegisterEventDelegate<MyEvent>(e => Console.WriteLine($"Received MyEvent"));
 ```

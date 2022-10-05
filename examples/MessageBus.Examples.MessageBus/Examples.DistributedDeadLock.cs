@@ -14,7 +14,7 @@ namespace MessageBus.Examples.MessageBus
             // LoadFromSourceQuery will execute a sub query SubQuery which will execute another LoadFromSourceQuery
             // Because there is only one LoadFromSourceQuery handler which is busy waiting for the result
             // of SubQuery - which is busy waiting for another QueryA result.
-            using IMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             eventSystem.RegisterQueryHandler(new LoadFromSourceHandler(eventSystem));
             eventSystem.RegisterQueryHandler(new SubQueryHandler(eventSystem));
@@ -31,7 +31,7 @@ namespace MessageBus.Examples.MessageBus
             // dead lock can happen.
             //
             // This is NOT a solution for the problem - it only covers the root problem.
-            using IMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             eventSystem.RegisterQueryHandler(new LoadFromSourceHandler(eventSystem));
             eventSystem.RegisterQueryHandler(new LoadFromSourceHandler(eventSystem));

@@ -16,7 +16,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public void MessageBusWithOneEventTopicAndOneListener()
         {
-            using var bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using var bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             RunTest(bus, numberOfSubscribers: 1);
         }
@@ -24,7 +24,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public void MessageBusWithOneEventTopicAndFiveListeners()
         {
-            using var bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using var bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             RunTest(bus, numberOfSubscribers: 5);
         }
@@ -32,7 +32,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public void MessageBusWithOneEventTopicAndHundredListeners()
         {
-            using var bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using var bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             RunTest(bus, numberOfSubscribers: 100);
         }

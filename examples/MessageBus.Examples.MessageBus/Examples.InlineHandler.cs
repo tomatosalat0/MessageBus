@@ -8,7 +8,7 @@ namespace MessageBus.Examples.MessageBus
     {
         public static async Task Execute(Application system)
         {
-            using MessageBrokerMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using MessageBrokerMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             eventSystem.RegisterCommandDelegate<LogMessageCommand>(
                 command => eventSystem.FireEvent(new LogMessageCreated(command.MessageId, $"[{DateTime.Now:o}] {command.LogMessage}"))

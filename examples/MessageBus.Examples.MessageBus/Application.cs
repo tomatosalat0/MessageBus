@@ -11,7 +11,7 @@ namespace MessageBus.Examples.MessageBus
 
         public Application()
         {
-            _eventBus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            _eventBus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             RegisterCommandHandlers();
             RegisterQueryHandlers();

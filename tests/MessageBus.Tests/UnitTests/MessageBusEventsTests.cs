@@ -15,7 +15,7 @@ namespace MessageBus.Tests.UnitTests
         public void EventHandlerIsCalledForEvents()
         {
             ManualScheduler scheduler = new ManualScheduler();
-            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
 
             int numberOfCalls = 0;
             bus.RegisterEventDelegate<TestEventA>(m => numberOfCalls++);
@@ -31,7 +31,7 @@ namespace MessageBus.Tests.UnitTests
         public void EventHandlerIsOnlyCalledForRegisteredEvents()
         {
             ManualScheduler scheduler = new ManualScheduler();
-            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
 
             int numberOfCalls = 0;
             bus.RegisterEventDelegate<TestEventA>(m => numberOfCalls++);
@@ -69,7 +69,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task EventHandlerSupportsAsync()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
             using SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
             await semaphore.WaitAsync();
@@ -102,7 +102,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public void SubscriptionAreHandlerGetsSubscription()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             SubscriptionAwareEventHandler handler = new SubscriptionAwareEventHandler();
             bus.RegisterEventHandler(handler);

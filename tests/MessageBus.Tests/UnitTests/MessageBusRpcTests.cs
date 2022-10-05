@@ -11,7 +11,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task RpcHandlerIsCalledForRpcs()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             bus.RegisterRpcDelegate<ToUpperCase, ToUpperCaseResult>(m => new ToUpperCaseResult(m.MessageId, m.Value.ToUpperInvariant()));
             ToUpperCase query = new ToUpperCase("test");
@@ -25,7 +25,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task ExceptionsInQueryWillGetThrownOnReceive()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             bus.RegisterRpcDelegate<ToUpperCase, ToUpperCaseResult>(m => throw new NotSupportedException());
             ToUpperCase query = new ToUpperCase("test");
@@ -38,7 +38,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task QueryHandlerSupportsAsync()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
             using SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
             await semaphore.WaitAsync();

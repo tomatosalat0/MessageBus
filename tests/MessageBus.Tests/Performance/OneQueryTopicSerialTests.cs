@@ -20,7 +20,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public async Task MessageBusWithOneEventTopicAndOneListener()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             await RunTest(bus, numberOfSubscribers: 1);
         }
@@ -28,7 +28,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public async Task MessageBusWithOneEventTopicAndFiveListeners()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             await RunTest(bus, numberOfSubscribers: 5);
         }

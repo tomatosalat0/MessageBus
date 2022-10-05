@@ -11,7 +11,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task ExecuteCommandWillGetCalledInTheBackground()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             int numberOfCalls = 0;
             bus.RegisterCommandDelegate<CommandA>(m => numberOfCalls++);
@@ -27,7 +27,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task ExecuteCommandAndWaitWillWaitForCompletion()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             int numberOfCalls = 0;
             bus.RegisterCommandDelegate<CommandA>(m => numberOfCalls++);
@@ -41,7 +41,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task ExecuteCommandAndWaitWillReThrowException()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             bus.RegisterCommandDelegate<CommandA>(m => throw new NotSupportedException());
             CommandA command = new CommandA();
@@ -77,7 +77,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task CommandHandlerSupportsAsync()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
             using SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
             await semaphore.WaitAsync();

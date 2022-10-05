@@ -2,13 +2,13 @@
 
 namespace MessageBus
 {
-    public sealed class NullExceptionNotification : IExceptionNotification
+    public sealed class NoExceptionNotification : IExceptionNotification
     {
-        private NullExceptionNotification()
+        private NoExceptionNotification()
         {
         }
 
-        public static NullExceptionNotification Instance { get; } = new NullExceptionNotification();
+        public static NoExceptionNotification Instance { get; } = new NoExceptionNotification();
 
         public void NotifyException(MessageId messageId, object message, Exception exception)
         {

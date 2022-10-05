@@ -22,7 +22,7 @@ namespace MessageBus.Examples.MessageBus
                 
                     new MessageBrokerEventBus(MemoryMessageBrokerBuilder.BlockingBroker(messageBrokerThreads: 1), NullExceptionNotification.Instance);
             */
-            using MessageBrokerMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using MessageBrokerMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             eventSystem.RegisterQueryHandler(new ExampleServiceQueryHandler(TimeSpan.FromSeconds(1)));
             eventSystem.RegisterCommandHandler(new EnsureSampleServiceWorkingCommand.Handler(eventSystem));

@@ -11,7 +11,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public async Task AwaitHandleGetsCompletedWhenPredicateMatches()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             AtLeast5EvenNumbersPredicate predicate = new AtLeast5EvenNumbersPredicate();
             AwaitHandle<NumberEvent> handle = bus.AwaitEvent(predicate.Predicate, CancellationToken.None);
@@ -33,7 +33,7 @@ namespace MessageBus.Tests.UnitTests
         [TestMethod]
         public void AwaitHandleCanBeDisposedWithoutAwaiting()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             AtLeast5EvenNumbersPredicate predicate = new AtLeast5EvenNumbersPredicate();
             AwaitHandle<NumberEvent> handle = bus.AwaitEvent(predicate.Predicate, CancellationToken.None);

@@ -16,7 +16,7 @@ namespace MessageBus.Tests.Performance
         [TestMethod]
         public void MessageBusWithFiveCommandTopicAndFiveListener()
         {
-            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NullExceptionNotification.Instance);
+            using IMessageBus bus = new MessageBrokerMessageBus(CreateBroker(), NoExceptionNotification.Instance);
 
             RunTest(bus);
         }
