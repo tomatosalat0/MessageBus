@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MessageBus
 {
@@ -13,6 +14,8 @@ namespace MessageBus
     /// </summary>
     public readonly struct MessageId : IEquatable<MessageId>
     {
+        private const string CausationSeparator = "->";
+
         private readonly string? _causationId;
 
         public MessageId(string value)
@@ -23,6 +26,8 @@ namespace MessageBus
         private MessageId(string value, string? causationId)
         {
             if (string.IsNullOrEmpty(value)) throw new ArgumentException($"'{nameof(value)}' cannot be null or empty.", nameof(value));
+            if (value.Contains(CausationSeparator)) throw new ArgumentException($"The message id must not contain '{CausationSeparator}', got '{value}'");
+            if (causationId is not null && causationId.Contains(CausationSeparator)) throw new ArgumentException($"The causation id must not contain '{CausationSeparator}', got '{causationId}'");
             Value = value;
             _causationId = causationId;
         }
@@ -68,12 +73,38 @@ namespace MessageBus
         public override string ToString()
         {
             return _causationId is not null
-                ? $"{_causationId}->{Value}"
+                ? $"{_causationId}{CausationSeparator}{Value}"
                 : Value.ToString();
         }
 
         public static bool operator ==(MessageId lhs, MessageId rhs) => lhs.Equals(rhs);
 
         public static bool operator !=(MessageId lhs, MessageId rhs) => !(lhs == rhs);
+
+        /// <summary>
+        /// Parses the provided <paramref name="value"/> and converts it to a <see cref="MessageId"/>.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="value"/> is not a valid message id.</exception>
+        public static MessageId Parse(string? value)
+        {
+            if (value is null) throw new ArgumentNullException(nameof(value));
+
+            ReadOnlySpan<char> asSpan = value.AsSpan();
+            if (asSpan.IsEmpty)
+                throw new ArgumentException($"The message id can not be an empty string");
+
+            int causationSeparation = asSpan.IndexOf(CausationSeparator, StringComparison.Ordinal);
+            if (causationSeparation < 0)
+                return new MessageId(value);
+
+            if (causationSeparation == 0 || causationSeparation == asSpan.Length - CausationSeparator.Length)
+                throw new ArgumentException($"The provided message id is not valid, got '{value}'");
+
+            ReadOnlySpan<char> causationId = asSpan.Slice(0, causationSeparation);
+            ReadOnlySpan<char> messageId = asSpan.Slice(causationSeparation + CausationSeparator.Length);
+
+            return new MessageId(messageId.ToString(), causationId.ToString());
+        }
     }
 }
