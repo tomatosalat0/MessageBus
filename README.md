@@ -197,7 +197,7 @@ The following code example creates an `IMessageBus` instance which uses an an `I
 ```cs
 using IMessageBus bus = new MessageBrokerMessageBus(
     MemoryMessageBrokerBuilder.InProcessBroker()
-        .UseMessageSerialization(new JsonSerializer()), 
+        .UseMessageSerialization(new JsonMessageSerializer()), 
     NoExceptionNotification.Instance
 );
 ```
@@ -227,6 +227,11 @@ private class MyEvent : IMessageEvent
 You can create your own custom serializer quite easily. All you need to do is to implement the interface `IMessageSerializer` defined in `MessageBus.Serialization`. 
 
 If you are unsure about it, don't be afraid to look into the projects `MessageBus.Serialization` and `MessageBus.Serialization.Json` to get an idea how the JSON serializer was implemented. 
+
+## Cross module communication
+While it might be tempting to create a shared library with all message type classes implementations and using that library in all projects, it is not a recommended way to do that. It will work in the end, but the introduction of strong coupling might be problem in the future. 
+
+Within the `examples` folder, you will find an example project which demonstrates sending a single event across modules without introducing a shared library/namespace/etc. 
 
 ## Concepts
 ### Message Types
