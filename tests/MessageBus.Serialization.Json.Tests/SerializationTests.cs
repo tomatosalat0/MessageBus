@@ -10,7 +10,7 @@ namespace MessageBus.Serialization.Json.Tests
     public class SerializationTests
     {
         [TestMethod]
-        public void MessageWillGetConvertedToAndFromJson()
+        public void EventMessageWillGetConvertedToAndFromJson()
         {
             ManualScheduler scheduler = new ManualScheduler();
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler))
@@ -36,6 +36,34 @@ namespace MessageBus.Serialization.Json.Tests
             Assert.IsFalse(isSameObjectReference);
         }
 
+        [TestMethod]
+        public void CommandMessageWillGetConvertedToAndFromJson()
+        {
+            ManualScheduler scheduler = new ManualScheduler();
+            using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler))
+                .UseMessageSerialization(new JsonMessageSerializer());
+
+            PlainMessage sendMessage = new PlainMessage("Hello World");
+
+            bool hasBeenFired = false;
+            bool hasSameMessageBody = false;
+            bool isSameObjectReference = false;
+
+            broker.Commands("TestTopic").Subscribe<PlainMessage>((message) =>
+            {
+                hasBeenFired = true;
+                hasSameMessageBody = message.Payload.Message == sendMessage.Message;
+                isSameObjectReference = object.ReferenceEquals(message.Payload, sendMessage);
+                message.Ack();
+            });
+            broker.Publish(sendMessage, "TestTopic");
+            scheduler.Drain();
+
+            Assert.IsTrue(hasBeenFired);
+            Assert.IsTrue(hasSameMessageBody);
+            Assert.IsFalse(isSameObjectReference);
+        }
+
         public class PlainMessage
         {
             public PlainMessage(string message)
@@ -47,7 +75,7 @@ namespace MessageBus.Serialization.Json.Tests
         }
 
         [TestMethod]
-        public void MessageWithMessageIdWillGetConvertedToAndFromJson()
+        public void EventMessageWithMessageIdWillGetConvertedToAndFromJson()
         {
             ManualScheduler scheduler = new ManualScheduler();
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler))
