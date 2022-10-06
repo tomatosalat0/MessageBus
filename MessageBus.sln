@@ -23,13 +23,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Examples.Broker.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Examples.Broker.Events", "examples\MessageBus.Examples.Broker.Events\MessageBus.Examples.Broker.Events.csproj", "{98430AC0-FCB0-4965-A2D5-154ECD44786E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Serialization.Json", "src\MessageBus.Serialization.Json\MessageBus.Serialization.Json.csproj", "{F8627133-6B28-42CC-979D-77724DFDC86A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Serialization.Json", "src\MessageBus.Serialization.Json\MessageBus.Serialization.Json.csproj", "{F8627133-6B28-42CC-979D-77724DFDC86A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Serialization", "src\MessageBus.Serialization\MessageBus.Serialization.csproj", "{4B99ADBD-5D7B-4134-82C3-C0AF26D7E49B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Serialization", "src\MessageBus.Serialization\MessageBus.Serialization.csproj", "{4B99ADBD-5D7B-4134-82C3-C0AF26D7E49B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Serialization.Json.Tests", "tests\MessageBus.Serialization.Json.Tests\MessageBus.Serialization.Json.Tests.csproj", "{41DF7F7C-03AF-465B-B467-25CCB1A81DF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Serialization.Json.Tests", "tests\MessageBus.Serialization.Json.Tests\MessageBus.Serialization.Json.Tests.csproj", "{41DF7F7C-03AF-465B-B467-25CCB1A81DF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Examples.CrossModulesCommunication", "examples\MessageBus.Examples.CrossModulesCommunication\MessageBus.Examples.CrossModulesCommunication.csproj", "{68FAA1AD-C033-4CCD-B8B3-E044744AFA16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Examples.CrossModulesCommunication", "examples\MessageBus.Examples.CrossModulesCommunication\MessageBus.Examples.CrossModulesCommunication.csproj", "{68FAA1AD-C033-4CCD-B8B3-E044744AFA16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Examples.SharedMessageInterface", "examples\MessageBus.Examples.SharedMessageInterface\MessageBus.Examples.SharedMessageInterface.csproj", "{A4699829-9BA0-4B00-9552-0A2B951B37BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{68FAA1AD-C033-4CCD-B8B3-E044744AFA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68FAA1AD-C033-4CCD-B8B3-E044744AFA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68FAA1AD-C033-4CCD-B8B3-E044744AFA16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4699829-9BA0-4B00-9552-0A2B951B37BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4699829-9BA0-4B00-9552-0A2B951B37BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4699829-9BA0-4B00-9552-0A2B951B37BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4699829-9BA0-4B00-9552-0A2B951B37BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{98430AC0-FCB0-4965-A2D5-154ECD44786E} = {527F9BF5-8CAB-4191-B481-0082EBB65789}
 		{41DF7F7C-03AF-465B-B467-25CCB1A81DF2} = {B03F39CA-0824-4E52-9884-B88FC7CEA8F8}
 		{68FAA1AD-C033-4CCD-B8B3-E044744AFA16} = {527F9BF5-8CAB-4191-B481-0082EBB65789}
+		{A4699829-9BA0-4B00-9552-0A2B951B37BA} = {527F9BF5-8CAB-4191-B481-0082EBB65789}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D89E58FA-EFDD-41E4-9401-6CCA20E10C9A}
