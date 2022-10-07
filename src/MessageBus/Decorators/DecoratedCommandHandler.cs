@@ -1,0 +1,19 @@
+﻿namespace MessageBus.Decorators
+{
+    internal abstract class DecoratedCommandHandler<TCommand> : BaseDecoratedHandler, IMessageCommandHandler<TCommand>
+        where TCommand : IMessageCommand
+    {
+        protected IMessageCommandHandler<TCommand> Inner { get; }
+
+        protected DecoratedCommandHandler(IMessageCommandHandler<TCommand> inner)
+            : base(inner)
+        {
+            Inner = inner;
+        }
+
+        public virtual void Handle(TCommand command)
+        {
+            Inner.Handle(command);
+        }
+    }
+}
