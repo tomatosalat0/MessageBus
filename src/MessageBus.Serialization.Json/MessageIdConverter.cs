@@ -8,7 +8,7 @@ namespace MessageBus.Serialization.Json
     {
         public override MessageId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return MessageId.Parse(reader.GetString()!);
+            return MessageId.Parse(reader.GetString());
         }
 
         public override void Write(Utf8JsonWriter writer, MessageId value, JsonSerializerOptions options)
