@@ -20,7 +20,7 @@ namespace MessageBus
 
         /// <summary>
         /// Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
-        /// If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again. 
+        /// If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again.
         /// Note that there is no maximum retry count.
         /// </summary>
         /// <remarks>If the provided <paramref name="handler"/> implements <see cref="ISubscriptionAwareHandler"/>, the result
@@ -45,7 +45,7 @@ namespace MessageBus
 
         /// <summary>
         /// Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
-        /// If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again. 
+        /// If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again.
         /// Note that there is no maximum retry count.
         /// </summary>
         /// <remarks>If the provided <paramref name="handler"/> implements <see cref="ISubscriptionAwareHandler"/>, the result
