@@ -2,7 +2,7 @@
 
 namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedAsyncCommandHandler<TCommand> : BaseDecoratedHandler, IAsyncMessageCommandHandler<TCommand>
+    public abstract class DecoratedAsyncCommandHandler<TCommand> : BaseDecoratedHandler, IAsyncMessageCommandHandler<TCommand>
         where TCommand : IMessageCommand
     {
         private readonly IAsyncMessageCommandHandler<TCommand> _inner;

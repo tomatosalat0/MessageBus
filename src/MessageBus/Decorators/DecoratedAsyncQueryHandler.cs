@@ -2,7 +2,7 @@
 
 namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedAsyncQueryHandler<TQuery, TQueryResult> : BaseDecoratedHandler, IAsyncMessageQueryHandler<TQuery, TQueryResult>
+    public abstract class DecoratedAsyncQueryHandler<TQuery, TQueryResult> : BaseDecoratedHandler, IAsyncMessageQueryHandler<TQuery, TQueryResult>
         where TQuery : IMessageQuery<TQueryResult>
         where TQueryResult : IMessageQueryResult
     {
@@ -14,7 +14,7 @@ namespace MessageBus.Decorators
             Inner = inner;
         }
 
-        public Task<TQueryResult> HandleAsync(TQuery query)
+        public virtual Task<TQueryResult> HandleAsync(TQuery query)
         {
             return Inner.HandleAsync(query);
         }

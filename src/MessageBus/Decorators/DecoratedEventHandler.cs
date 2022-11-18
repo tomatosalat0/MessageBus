@@ -1,6 +1,6 @@
 ﻿namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedEventHandler<TEvent> : BaseDecoratedHandler, IMessageEventHandler<TEvent>
+    public abstract class DecoratedEventHandler<TEvent> : BaseDecoratedHandler, IMessageEventHandler<TEvent>
         where TEvent : IMessageEvent
     {
         protected IMessageEventHandler<TEvent> Inner { get; }

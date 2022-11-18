@@ -1,6 +1,6 @@
 ﻿namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedRpcHandler<TRpc, TRpcResult> : BaseDecoratedHandler, IMessageRpcHandler<TRpc, TRpcResult>
+    public abstract class DecoratedRpcHandler<TRpc, TRpcResult> : BaseDecoratedHandler, IMessageRpcHandler<TRpc, TRpcResult>
         where TRpc : IMessageRpc<TRpcResult>
         where TRpcResult : IMessageRpcResult
     {
@@ -12,7 +12,7 @@
             Inner = inner;
         }
 
-        public TRpcResult Handle(TRpc query)
+        public virtual TRpcResult Handle(TRpc query)
         {
             return Inner.Handle(query);
         }

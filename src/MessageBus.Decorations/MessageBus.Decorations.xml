@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MessageBus.Decorations</name>
+    </assembly>
+    <members>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IAsyncMessageCommandHandler{``0})">
+            <summary>
+            Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The default
+            duplicate detection implementation will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IAsyncMessageCommandHandler{``0},MessageBus.Decorations.Duplications.IDuplicateDetection)">
+            <summary>
+            Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The provided
+            <paramref name="duplicateDetection"/> will get used to detect duplicates.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IMessageCommandHandler{``0})">
+            <summary>
+            Returns a new handler which will detect already received messages. Already received message will get dropped silently. The default
+            duplicate detection implementation will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IMessageCommandHandler{``0},MessageBus.Decorations.Duplications.IDuplicateDetection)">
+            <summary>
+            Returns a new handler which will detect already received messages. Already received message will silently get dropped. The provided
+            <paramref name="duplicateDetection"/> will get used to detect duplicates.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.Decorations.Duplications.IDuplicateDetection.HandleReceivedMessage(MessageBus.MessageId)">
+            <summary>
+            Gets a <see cref="T:MessageBus.MessageId"/> from an incomming message. This id
+            gets stored. Returns true if the <paramref name="messageId"/>
+            has not been seen before, otherwise false.
+            </summary>
+        </member>
+        <member name="M:MessageBus.Decorations.Duplications.IDuplicateDetection.ForgetMessage(MessageBus.MessageId)">
+            <summary>
+            Instructs the duplication detection to forget about the provided
+            <paramref name="messageId"/>. A future call to <see cref="M:MessageBus.Decorations.Duplications.IDuplicateDetection.HandleReceivedMessage(MessageBus.MessageId)"/>
+            must return true for the same message id again.
+            </summary>
+        </member>
+        <member name="M:MessageBus.AutomaticRetryMessageHandlerExtensions.WithRetryOnException``1(MessageBus.IAsyncMessageCommandHandler{``0})">
+            <summary>
+            Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
+            If an exception occurs, the command will get scheduled again. Note that there is no maximum retry count.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.AutomaticRetryMessageHandlerExtensions.WithRetryOnException``1(MessageBus.IAsyncMessageCommandHandler{``0},System.Func{System.Exception,System.Boolean})">
+            <summary>
+            Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
+            If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again. 
+            Note that there is no maximum retry count.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.AutomaticRetryMessageHandlerExtensions.WithRetryOnException``1(MessageBus.IMessageCommandHandler{``0})">
+            <summary>
+            Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
+            If an exception occurs, the command will get scheduled again. Note that there is no maximum retry count.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.AutomaticRetryMessageHandlerExtensions.WithRetryOnException``1(MessageBus.IMessageCommandHandler{``0},System.Func{System.Exception,System.Boolean})">
+            <summary>
+            Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
+            If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again. 
+            Note that there is no maximum retry count.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+    </members>
+</doc>

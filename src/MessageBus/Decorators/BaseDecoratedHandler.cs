@@ -2,11 +2,11 @@
 
 namespace MessageBus.Decorators
 {
-    internal abstract class BaseDecoratedHandler : ISubscriptionAwareHandler
+    public abstract class BaseDecoratedHandler : ISubscriptionAwareHandler
     {
         private readonly object _inner;
 
-        protected BaseDecoratedHandler(object inner)
+        internal protected BaseDecoratedHandler(object inner)
         {
             _inner = inner;
         }

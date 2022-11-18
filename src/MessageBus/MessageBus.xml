@@ -304,6 +304,16 @@
             </list>
             </summary>
         </member>
+        <member name="M:MessageBus.MessageId.NewId">
+            <summary>
+            Generate a new message id.
+            </summary>
+        </member>
+        <member name="M:MessageBus.MessageId.CausedBy(MessageBus.MessageId)">
+            <summary>
+            Generate a new message containing another <paramref name="messageId"/> as its causation.
+            </summary>
+        </member>
         <member name="P:MessageBus.MessageId.Value">
             <summary>
             The raw value.

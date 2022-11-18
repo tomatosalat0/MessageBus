@@ -1,6 +1,6 @@
 ﻿namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedCommandHandler<TCommand> : BaseDecoratedHandler, IMessageCommandHandler<TCommand>
+    public abstract class DecoratedCommandHandler<TCommand> : BaseDecoratedHandler, IMessageCommandHandler<TCommand>
         where TCommand : IMessageCommand
     {
         protected IMessageCommandHandler<TCommand> Inner { get; }

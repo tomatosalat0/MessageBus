@@ -1,6 +1,6 @@
 ﻿namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedQueryHandler<TQuery, TQueryResult> : BaseDecoratedHandler, IMessageQueryHandler<TQuery, TQueryResult>
+    public abstract class DecoratedQueryHandler<TQuery, TQueryResult> : BaseDecoratedHandler, IMessageQueryHandler<TQuery, TQueryResult>
         where TQuery : IMessageQuery<TQueryResult>
         where TQueryResult : IMessageQueryResult
     {
@@ -12,7 +12,7 @@
             Inner = inner;
         }
 
-        public TQueryResult Handle(TQuery query)
+        public virtual TQueryResult Handle(TQuery query)
         {
             return Inner.Handle(query);
         }

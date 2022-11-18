@@ -2,7 +2,7 @@
 
 namespace MessageBus.Decorators
 {
-    internal abstract class DecoratedAsyncRpcHandler<TRpc, TRpcResult> : BaseDecoratedHandler, IAsyncMessageRpcHandler<TRpc, TRpcResult>
+    public abstract class DecoratedAsyncRpcHandler<TRpc, TRpcResult> : BaseDecoratedHandler, IAsyncMessageRpcHandler<TRpc, TRpcResult>
         where TRpc : IMessageRpc<TRpcResult>
         where TRpcResult : IMessageRpcResult
     {
@@ -14,7 +14,7 @@ namespace MessageBus.Decorators
             Inner = inner;
         }
 
-        public Task<TRpcResult> HandleAsync(TRpc query)
+        public virtual Task<TRpcResult> HandleAsync(TRpc query)
         {
             return Inner.HandleAsync(query);
         }
