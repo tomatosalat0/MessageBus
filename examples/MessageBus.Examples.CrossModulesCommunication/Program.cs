@@ -20,7 +20,7 @@ namespace MessageBus.Examples.CrossModulesCommunication
 
         Important implementation detail: Each module doesn't know anything about each other here
         - even the Event Classes itself aren't shared. This makes it a lot harder to actually
-        change the event itself later on. But but would be the case never the less if both modules
+        change the event itself later on. But that would be the case never the less if both modules
         would live in different projects/processes anyway. If you go with this route, your events
         will become an API.
 

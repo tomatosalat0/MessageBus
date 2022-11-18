@@ -33,13 +33,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Examples.CrossMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Examples.SharedMessageInterface", "examples\MessageBus.Examples.SharedMessageInterface\MessageBus.Examples.SharedMessageInterface.csproj", "{A4699829-9BA0-4B00-9552-0A2B951B37BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.AcceptanceTests", "tests\MessageBus.AcceptanceTests\MessageBus.AcceptanceTests.csproj", "{C90C35D7-52A8-410E-AC54-9E59303CB8F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.AcceptanceTests", "tests\MessageBus.AcceptanceTests\MessageBus.AcceptanceTests.csproj", "{C90C35D7-52A8-410E-AC54-9E59303CB8F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Broker.RabbitMq", "adapters\MessageBus.Broker.RabbitMq\MessageBus.Broker.RabbitMq.csproj", "{868EB09B-F8A5-4D36-A571-BADEE40FCAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Broker.RabbitMq", "adapters\MessageBus.Broker.RabbitMq\MessageBus.Broker.RabbitMq.csproj", "{868EB09B-F8A5-4D36-A571-BADEE40FCAB5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adapters", "adapters", "{6B415028-B42D-47BB-A0DB-3A401C2AC1B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Broker.RabbitMq.Tests", "adapters\MessageBus.Broker.RabbitMq.Tests\MessageBus.Broker.RabbitMq.Tests.csproj", "{B014CC8D-ECC0-4F01-B0DE-2A8B4563B72B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBus.Broker.RabbitMq.Tests", "adapters\MessageBus.Broker.RabbitMq.Tests\MessageBus.Broker.RabbitMq.Tests.csproj", "{B014CC8D-ECC0-4F01-B0DE-2A8B4563B72B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus.Decorations", "src\MessageBus.Decorations\MessageBus.Decorations.csproj", "{A4D0E30B-CB3C-4084-A59F-36026DD6E7F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{B014CC8D-ECC0-4F01-B0DE-2A8B4563B72B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B014CC8D-ECC0-4F01-B0DE-2A8B4563B72B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B014CC8D-ECC0-4F01-B0DE-2A8B4563B72B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4D0E30B-CB3C-4084-A59F-36026DD6E7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4D0E30B-CB3C-4084-A59F-36026DD6E7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4D0E30B-CB3C-4084-A59F-36026DD6E7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4D0E30B-CB3C-4084-A59F-36026DD6E7F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

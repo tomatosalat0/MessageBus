@@ -27,6 +27,7 @@ namespace MessageBus.Examples.SharedMessageInterface.Services
 
             public IGetCurrentDateTimeQuery.IResult Handle(IGetCurrentDateTimeQuery query)
             {
+                Console.WriteLine($"[{nameof(DateTimeService)}] Current time requested");
                 DateTime result = query.UniversalTime ? DateTime.UtcNow : DateTime.Now;
                 return new Result(result, query.MessageId);
             }

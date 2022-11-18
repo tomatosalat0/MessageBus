@@ -38,7 +38,7 @@ namespace MessageBus.Examples.SharedMessageInterface.ModuleA
                 // note that the type is defined explicitely to IMyEvent. Thats because
                 // the actual topic is defined within the interface and not in the concrete
                 // implementation "ModuleAEvent"
-                Console.WriteLine($"[{nameof(ModuleA)}] Broadcasting event");
+                Console.WriteLine($"[{nameof(ModuleA)}] Received the current date, broadcasting event");
                 await _messageBus.FireEvent<IMyEvent>(new ModuleAEvent(DateTime.Now));
             }
 

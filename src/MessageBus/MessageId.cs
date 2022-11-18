@@ -31,11 +31,17 @@ namespace MessageBus
             _causationId = causationId;
         }
 
+        /// <summary>
+        /// Generate a new message id.
+        /// </summary>
         public static MessageId NewId()
         {
             return new MessageId(Guid.NewGuid().ToString("N"));
         }
 
+        /// <summary>
+        /// Generate a new message containing another <paramref name="messageId"/> as its causation.
+        /// </summary>
         public static MessageId CausedBy(MessageId messageId)
         {
             return new MessageId(Guid.NewGuid().ToString("N"), messageId.Value);

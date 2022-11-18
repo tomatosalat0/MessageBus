@@ -30,7 +30,7 @@ namespace MessageBus.Examples.MessageBus
             // This is flawed because if multiple parallel queries get executed, the same
             // dead lock can happen.
             //
-            // This is NOT a solution for the problem - it only covers the root problem.
+            // This is NOT a solution for the problem - it only hides the root problem.
             using IMessageBus eventSystem = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
             eventSystem.RegisterQueryHandler(new LoadFromSourceHandler(eventSystem));
