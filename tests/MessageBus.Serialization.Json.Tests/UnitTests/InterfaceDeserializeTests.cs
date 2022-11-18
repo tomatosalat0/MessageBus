@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +15,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\"}");
             ConcreteClass instance = serializer.Deserialize<ConcreteClass>(inputJson);
 
             Assert.IsNotNull(instance);
@@ -25,7 +26,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
         public void InterfaceDeserializationDoesntWorkWithoutCustomDeserializer()
         {
             IMessageSerializer serializer = new JsonMessageSerializer();
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\", \"IntValue\": 42, \"BoolValue\": true}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\", \"intValue\": 42, \"boolValue\": true}");
 
             Assert.ThrowsException<NotSupportedException>(() => serializer.Deserialize<ITest>(inputJson));
         }
@@ -36,7 +37,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\", \"IntValue\": 42, \"BoolValue\": true}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\", \"intValue\": 42, \"boolValue\": true}");
             ITest instance = serializer.Deserialize<ITest>(inputJson);
 
             Assert.IsNotNull(instance);
@@ -51,7 +52,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":null}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":null}");
             Assert.ThrowsException<ArgumentNullException>(() => serializer.Deserialize<ITest>(inputJson));
         }
 
@@ -65,7 +66,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
                     ThrowExceptionSettingNullToNotNullProperty = false
                 });
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":null}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":null}");
             ITest instance = serializer.Deserialize<ITest>(inputJson);
 
             Assert.IsNull(instance.StringValue);
@@ -113,7 +114,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\"}");
             IReadWrite instance = serializer.Deserialize<IReadWrite>(inputJson);
 
             Assert.AreEqual("test value", instance.StringValue);
@@ -128,7 +129,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\"}");
             IWriteOnly instance = serializer.Deserialize<IWriteOnly>(inputJson);
 
             Assert.IsNotNull(instance);
@@ -140,7 +141,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\"}");
             IWithDefaultValue instance = serializer.Deserialize<IWithDefaultValue>(inputJson);
 
             Assert.AreEqual("test value", instance.StringValue);
@@ -153,7 +154,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\", \"UpperCaseValue\": \"something else\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\", \"upperCaseValue\": \"something else\"}");
             IWithDefaultValue instance = serializer.Deserialize<IWithDefaultValue>(inputJson);
 
             Assert.AreEqual("test value", instance.StringValue);
@@ -166,7 +167,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"Values\":[\"test value\", \"something else\"]}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"values\":[\"test value\", \"something else\"]}");
             IWithGenericList instance = serializer.Deserialize<IWithGenericList>(inputJson);
 
             Assert.AreEqual(2, instance.Values.Count);
@@ -180,7 +181,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"Properties\":{\"test value\": \"something else\"}}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"properties\":{\"test value\": \"something else\"}}");
             IWithGenericDictionary instance = serializer.Deserialize<IWithGenericDictionary>(inputJson);
 
             Assert.AreEqual(1, instance.Properties.Count);
@@ -193,7 +194,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"StringValue\":\"test value\", \"SubType\": 42, \"Additional\": \"extra\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"stringValue\":\"test value\", \"subType\": 42, \"additional\": \"extra\"}");
             ISubType instance = serializer.Deserialize<ISubType>(inputJson);
 
             Assert.AreEqual("test value", instance.StringValue);
@@ -207,7 +208,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer(new TypeCreationOptions());
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"MessageId\":\"myMessageId\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"messageId\":\"myMessageId\"}");
             IHasMessageId instance = serializer.Deserialize<IHasMessageId>(inputJson);
 
             Assert.AreEqual("myMessageId", instance.MessageId.Value);
@@ -219,7 +220,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"MessageId\":\"myMessageId\", \"Value\": \"extra\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"messageId\":\"myMessageId\", \"value\": \"extra\"}");
             IExampleEvent instance = serializer.Deserialize<IExampleEvent>(inputJson);
 
             Assert.AreEqual("myMessageId", instance.MessageId.Value);
@@ -246,7 +247,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();
 
-            byte[] inputJson = Encoding.UTF8.GetBytes("{\"Value\": \"extra\"}");
+            byte[] inputJson = Encoding.UTF8.GetBytes("{\"value\": \"extra\"}");
             IParent.INested instance = serializer.Deserialize<IParent.INested>(inputJson);
 
             Assert.AreEqual("extra", instance.Value);
