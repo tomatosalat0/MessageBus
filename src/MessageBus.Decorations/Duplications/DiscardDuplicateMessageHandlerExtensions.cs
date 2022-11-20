@@ -72,7 +72,7 @@ namespace MessageBus
 
                 try
                 {
-                    await base.HandleAsync(command);
+                    await base.HandleAsync(command).ConfigureAwait(false);
                 }
                 catch (System.Exception)
                 {

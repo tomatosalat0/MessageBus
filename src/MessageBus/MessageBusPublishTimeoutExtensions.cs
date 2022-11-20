@@ -18,7 +18,7 @@ namespace MessageBus
             where TCommand : IMessageCommand
         {
             using CancellationTokenSource timeoutTokenSource = new CancellationTokenSource(timeout);
-            await messageBus.FireCommandAndWait(command, timeoutTokenSource.Token);
+            await messageBus.FireCommandAndWait(command, timeoutTokenSource.Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace MessageBus
             where TQueryResult : IMessageQueryResult
         {
             using CancellationTokenSource timeoutTokenSource = new CancellationTokenSource(timeout);
-            return await messageBus.FireQuery<TQuery, TQueryResult>(query, timeoutTokenSource.Token);
+            return await messageBus.FireQuery<TQuery, TQueryResult>(query, timeoutTokenSource.Token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace MessageBus
             where TRpcResult : IMessageRpcResult
         {
             using CancellationTokenSource timeoutTokenSource = new CancellationTokenSource(timeout);
-            return await messageBus.FireRpc<TRpc, TRpcResult>(rpcParameter, timeoutTokenSource.Token);
+            return await messageBus.FireRpc<TRpc, TRpcResult>(rpcParameter, timeoutTokenSource.Token).ConfigureAwait(false);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace MessageBus
 
             public override Task HandleAsync(TCommand command)
             {
-                Task.Run(async () => await base.HandleAsync(command));
+                Task.Run(async () => await base.HandleAsync(command).ConfigureAwait(false));
                 return Task.CompletedTask;
             }
         }
@@ -102,7 +102,7 @@ namespace MessageBus
 
             public override Task HandleAsync(TEvent command)
             {
-                Task.Run(async () => await base.HandleAsync(command));
+                Task.Run(async () => await base.HandleAsync(command).ConfigureAwait(false));
                 return Task.CompletedTask;
             }
         }

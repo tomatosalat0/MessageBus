@@ -1,0 +1,6 @@
+﻿
+# CA2007: Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = warning
+
+# CA2000: Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = warning

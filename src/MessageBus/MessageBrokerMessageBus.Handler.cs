@@ -186,7 +186,7 @@ namespace MessageBus
         {
             try
             {
-                await execution();
+                await execution().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

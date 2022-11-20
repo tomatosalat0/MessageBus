@@ -23,7 +23,7 @@ namespace MessageBus.AcceptanceTests
 
             try
             {
-                IMyRpcResult receivedEvent = await bus.FireRpc<IMyRpc, IMyRpcResult>(firedRpc, TimeSpan.FromSeconds(2));
+                IMyRpcResult receivedEvent = await bus.FireRpc<IMyRpc, IMyRpcResult>(firedRpc, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                 Assert.Fail("The thrown exception did not get propagated back.");
             }
             catch (Exception ex)
@@ -48,7 +48,7 @@ namespace MessageBus.AcceptanceTests
 
             try
             {
-                IMyQueryResult receivedEvent = await bus.FireQuery<IMyQuery, IMyQueryResult>(firedQuery, TimeSpan.FromSeconds(2));
+                IMyQueryResult receivedEvent = await bus.FireQuery<IMyQuery, IMyQueryResult>(firedQuery, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                 Assert.Fail("The thrown exception did not get propagated back.");
             }
             catch (Exception ex)
@@ -74,7 +74,7 @@ namespace MessageBus.AcceptanceTests
 
             try
             {
-                await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2));
+                await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                 Assert.Fail("The thrown exception did not get propagated back.");
             }
             catch (Exception ex)
@@ -103,7 +103,7 @@ namespace MessageBus.AcceptanceTests
                     resetEvent.Set();
             });
 
-            await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(async () => await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)));
+            await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(async () => await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)).ConfigureAwait(false)).ConfigureAwait(false);
 
             Assert.IsFalse(resetEvent.Wait(TimeSpan.FromSeconds(2)));
         }
@@ -125,7 +125,7 @@ namespace MessageBus.AcceptanceTests
                     throw new NotSupportedException(exceptionMessage);
             });
 
-            MessageOperationFailedException ex = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(async () => await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)));
+            MessageOperationFailedException ex = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(async () => await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)).ConfigureAwait(false)).ConfigureAwait(false);
             Assert.AreEqual(2, counter);
             Assert.AreEqual(exceptionMessage, ex.Message);            
         }
@@ -148,7 +148,7 @@ namespace MessageBus.AcceptanceTests
                     resetEvent.Set();
             });
 
-            await bus.FireCommand(firedCommand);
+            await bus.FireCommand(firedCommand).ConfigureAwait(false);
 
             Assert.IsFalse(resetEvent.Wait(TimeSpan.FromSeconds(2)));
         }

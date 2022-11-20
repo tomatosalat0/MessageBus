@@ -20,7 +20,7 @@ namespace MessageBus.Serialization.Json.DynamicTypes
 
         public RuntimeTypeCreator(TypeCreationOptions options)
         {
-            AssemblyName name = new AssemblyName($"{typeof(RuntimeTypeCreator).Namespace ?? ""}_DynamicAssembly_{Guid.NewGuid():N}");
+            AssemblyName name = new AssemblyName($"{typeof(RuntimeTypeCreator).Namespace ?? string.Empty}_DynamicAssembly_{Guid.NewGuid():N}");
             AssemblyBuilder builder = AssemblyBuilder.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
             _dynamicTypesModule = builder.DefineDynamicModule(_moduleName);
             _options = options;
@@ -111,7 +111,6 @@ namespace MessageBus.Serialization.Json.DynamicTypes
             CustomAttributeBuilder builder = new CustomAttributeBuilder(_jsonIgnoreAttributeConstructor, Array.Empty<object>());
             propertyBuilder.SetCustomAttribute(builder);
         }
-
 
         private void AddJsonIncludeProperty(PropertyBuilder propertyBuilder)
         {

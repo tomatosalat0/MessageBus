@@ -138,7 +138,7 @@ namespace MessageBus
             using var successSubscription = RegisterCompleteHandler<TSuccess>(successTopic, (o) => channel.Writer.TryWrite(ResponseOutcome<TSuccess, TFailure>.Success(o)));
             using var failureSubscription = RegisterCompleteHandler<TFailure>(failureTopic, (o) => channel.Writer.TryWrite(ResponseOutcome<TSuccess, TFailure>.Failure(o)));
 
-            await _broker.PublishCommand(request, fireTopic);
+            await _broker.PublishCommand(request, fireTopic).ConfigureAwait(false);
             await foreach (var p in channel.Reader.ReadAllAsync(cancellationToken))
             {
                 if (p.MessageId == request.MessageId)

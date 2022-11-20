@@ -69,7 +69,7 @@ namespace MessageBus
 
         private static async Task<TEvent> CreateAwaitableTask<TEvent>(ChannelReader<TEvent> source, CancellationToken cancellationToken)
         {
-            return await source.ReadAsync(cancellationToken);
+            return await source.ReadAsync(cancellationToken).ConfigureAwait(false);
         }
 
         private static Func<TEvent, Task> CreateEventHandler<TEvent>(Func<TEvent, bool> predicate, ChannelWriter<TEvent> target, CancellationToken cancellationToken)
@@ -77,7 +77,7 @@ namespace MessageBus
             return async (@event) =>
             {
                 if (predicate(@event))
-                    await target.WriteAsync(@event, cancellationToken);
+                    await target.WriteAsync(@event, cancellationToken).ConfigureAwait(false);
             };
         }
     }

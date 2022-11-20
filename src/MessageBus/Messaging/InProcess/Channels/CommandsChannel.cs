@@ -23,8 +23,10 @@ namespace MessageBus.Messaging.InProcess.Channels
             int expectedIterations = _availableSubscriptions.Count;
             for (int i = 0; i < expectedIterations; i++)
             {
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 if (!_availableSubscriptions.TryDequeue(out var subscription))
                     return;
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
                 if (subscription.IsActive)
                     _availableSubscriptions.Enqueue(subscription);
@@ -47,8 +49,10 @@ namespace MessageBus.Messaging.InProcess.Channels
             ChannelSubscription? subscription;
             do
             {
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 if (!_availableSubscriptions.TryDequeue(out subscription))
                     goto fail;
+#pragma warning restore CA2000 // Dispose objects before losing scope
             } while (!subscription.IsActive);
 
             if (!_pendingWork.TryDequeue(out Message? work))

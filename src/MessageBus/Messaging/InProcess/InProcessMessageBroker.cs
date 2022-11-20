@@ -12,8 +12,6 @@ namespace MessageBus.Messaging.InProcess
 {
     public class InProcessMessageBroker : IMessageBroker, ICollectable, IExecutable
     {
-        private const int BUFFERED_CHANNEL_REMOVE_SIZE = 20;
-
         private readonly LockedDictionary<TopicName, IWorkableChannel> _channels = new LockedDictionary<TopicName, IWorkableChannel>();
         private readonly BlockingCollection<object> _awakeSignals = new BlockingCollection<object>();
         private readonly BlockingCollection<Action> _pendingActions = new BlockingCollection<Action>();

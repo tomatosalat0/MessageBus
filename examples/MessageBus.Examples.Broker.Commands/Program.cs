@@ -113,13 +113,13 @@ namespace MessageBus.Examples.Broker.Commands
             Subscribe(broker, "A");
             Task t = FireAsync(broker);
 
-            Console.WriteLine($"[{Thread.CurrentThread.ManagedThreadId:D2}]: Press ENTER to start sending the messages");
+            Console.WriteLine($"[{Environment.CurrentManagedThreadId:D2}]: Press ENTER to start sending the messages");
             Console.ReadLine();
             await t;
 
-            Console.WriteLine($"[{Thread.CurrentThread.ManagedThreadId:D2}]: Executing manual drain");
+            Console.WriteLine($"[{Environment.CurrentManagedThreadId:D2}]: Executing manual drain");
             manual.Drain();
-            Console.WriteLine($"[{Thread.CurrentThread.ManagedThreadId:D2}]: Draining complete");
+            Console.WriteLine($"[{Environment.CurrentManagedThreadId:D2}]: Draining complete");
 
             RunComplete();
         }
@@ -127,7 +127,7 @@ namespace MessageBus.Examples.Broker.Commands
         static void RunComplete()
         {
             Console.WriteLine();
-            Console.WriteLine($"Run complete [{Thread.CurrentThread.ManagedThreadId:D2}]: Press ENTER to continue");
+            Console.WriteLine($"Run complete [{Environment.CurrentManagedThreadId:D2}]: Press ENTER to continue");
             Console.ReadLine();
         }
 
@@ -138,7 +138,7 @@ namespace MessageBus.Examples.Broker.Commands
 
         static void HandleMyChannelMessage(IMessage<MyChannelMessage> message, string subscriberName, Action? onComplete)
         {
-            Console.WriteLine($"[{Thread.CurrentThread.ManagedThreadId:D2}]: [{subscriberName}] Got message: '{message.Payload.Text}'");
+            Console.WriteLine($"[{Environment.CurrentManagedThreadId:D2}]: [{subscriberName}] Got message: '{message.Payload.Text}'");
             onComplete?.Invoke();
             message.Ack();
         }

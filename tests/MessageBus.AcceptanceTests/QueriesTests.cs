@@ -17,7 +17,7 @@ namespace MessageBus.AcceptanceTests
 
             bus.RegisterQueryDelegate<IMyQuery, IMyQueryResult>(received => new MyQueryResult(received.Value + "+Result", received.MessageId));
 
-            IMyQueryResult receivedResult = await bus.FireQuery<IMyQuery, IMyQueryResult>(firedQuery, TimeSpan.FromSeconds(2));
+            IMyQueryResult receivedResult = await bus.FireQuery<IMyQuery, IMyQueryResult>(firedQuery, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
 
             Assert.AreNotSame(firedQuery, receivedResult);
             Assert.AreEqual(firedQuery.MessageId, receivedResult.MessageId);
@@ -33,7 +33,7 @@ namespace MessageBus.AcceptanceTests
 
             bus.RegisterQueryDelegate<IMyQuery, IMyQueryResult>(_ => throw new Exception("My exception"));
 
-            Exception exception = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(() => bus.FireQuery<IMyQuery, IMyQueryResult>(firedQuery, TimeSpan.FromSeconds(2)));
+            Exception exception = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(() => bus.FireQuery<IMyQuery, IMyQueryResult>(firedQuery, TimeSpan.FromSeconds(2))).ConfigureAwait(false);
             Assert.AreEqual("My exception", exception.Message);
         }
 

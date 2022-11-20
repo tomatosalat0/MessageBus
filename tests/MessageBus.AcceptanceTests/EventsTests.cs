@@ -24,7 +24,7 @@ namespace MessageBus.AcceptanceTests
                 notifyEvent.Set();
             });
 
-            await bus.FireEvent(firedEvent);
+            await bus.FireEvent(firedEvent).ConfigureAwait(false);
 
             bool waitComplete = notifyEvent.Wait(TimeSpan.FromSeconds(2));
             Assert.IsTrue(waitComplete);

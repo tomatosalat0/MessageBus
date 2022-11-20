@@ -24,7 +24,7 @@ namespace MessageBus.AcceptanceTests
                 notifyEvent.Set();
             });
 
-            await bus.FireCommand(firedCommand);
+            await bus.FireCommand(firedCommand).ConfigureAwait(false);
 
             bool waitComplete = notifyEvent.Wait(TimeSpan.FromSeconds(2));
             Assert.IsTrue(waitComplete);
@@ -47,7 +47,7 @@ namespace MessageBus.AcceptanceTests
                 receivedCommand = received;
             });
 
-            await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2));
+            await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
             Assert.IsNotNull(receivedCommand);
             Assert.AreEqual(firedCommand.MessageId, receivedCommand.MessageId);
             Assert.AreEqual(firedCommand.Value, receivedCommand.Value);
@@ -64,7 +64,7 @@ namespace MessageBus.AcceptanceTests
                 throw new Exception("My custom exception");
             });
 
-            Exception ex = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(() => bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)));
+            Exception ex = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(() => bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2))).ConfigureAwait(false);
             Assert.AreEqual("My custom exception", ex.Message);
         }
 
@@ -85,7 +85,7 @@ namespace MessageBus.AcceptanceTests
                 receivedCommand = received;
             });
 
-            await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2));
+            await bus.FireCommandAndWait(firedCommand, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
             Assert.IsNotNull(receivedCommand);
             Assert.AreEqual(firedCommand.MessageId, receivedCommand.MessageId);
             Assert.AreEqual(firedCommand.Value, receivedCommand.Value);

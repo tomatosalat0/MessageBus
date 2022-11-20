@@ -47,7 +47,7 @@ namespace MessageBus
         {
             try
             {
-                return await _handle;
+                return await _handle.ConfigureAwait(false);
             }
             finally
             {

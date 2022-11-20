@@ -34,6 +34,7 @@
         public T Payload { get; }
 
         public static implicit operator Message(Message<T> message) => new Message(message.Payload!, message.StateContainer);
+
         public static implicit operator Message<T>(Message message) => new Message<T>((T)message.Payload, message.StateContainer);
     }
 }

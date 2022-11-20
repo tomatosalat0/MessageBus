@@ -17,7 +17,7 @@ namespace MessageBus.AcceptanceTests
 
             bus.RegisterRpcDelegate<IMyRpc, IMyRcpResult>(received => new MyRpcResultImpl(received.Value + "+Result", received.MessageId));
 
-            IMyRcpResult receivedResult = await bus.FireRpc<IMyRpc, IMyRcpResult>(firedRpc, TimeSpan.FromSeconds(2));
+            IMyRcpResult receivedResult = await bus.FireRpc<IMyRpc, IMyRcpResult>(firedRpc, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
 
             Assert.AreNotSame(firedRpc, receivedResult);
             Assert.AreEqual(firedRpc.MessageId, receivedResult.MessageId);
@@ -33,7 +33,7 @@ namespace MessageBus.AcceptanceTests
 
             bus.RegisterRpcDelegate<IMyRpc, IMyRcpResult>(received => throw new Exception("My exception"));
 
-            Exception exception = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(() => bus.FireRpc<IMyRpc, IMyRcpResult>(firedRpc, TimeSpan.FromSeconds(2)));
+            Exception exception = await Assert.ThrowsExceptionAsync<MessageOperationFailedException>(() => bus.FireRpc<IMyRpc, IMyRcpResult>(firedRpc, TimeSpan.FromSeconds(2))).ConfigureAwait(false);
             Assert.AreEqual("My exception", exception.Message);
         }
 
