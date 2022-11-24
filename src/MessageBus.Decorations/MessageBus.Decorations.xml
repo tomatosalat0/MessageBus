@@ -4,6 +4,38 @@
         <name>MessageBus.Decorations</name>
     </assembly>
     <members>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IAsyncMessageEventHandler{``0})">
+            <summary>
+            Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The default
+            duplicate detection implementation will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IAsyncMessageEventHandler{``0},MessageBus.Decorations.Duplications.IDuplicateDetection)">
+            <summary>
+            Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The provided
+            <paramref name="duplicateDetection"/> will get used to detect duplicates.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IMessageEventHandler{``0})">
+            <summary>
+            Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The default
+            duplicate detection implementation will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IMessageEventHandler{``0},MessageBus.Decorations.Duplications.IDuplicateDetection)">
+            <summary>
+            Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The provided
+            <paramref name="duplicateDetection"/> will get used to detect duplicates.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
         <member name="M:MessageBus.DiscardDuplicateMessageHandlerExtensions.WithDuplicateMessageDetection``1(MessageBus.IAsyncMessageCommandHandler{``0})">
             <summary>
             Returns a new async handler which will detect already received messages. Already received message will get dropped silently. The default
@@ -50,6 +82,20 @@
             must return true for the same message id again.
             </summary>
         </member>
+        <member name="M:MessageBus.Decorations.Versioning.IVersionDetection`1.HandleMessageVersion(`0)">
+            <summary>
+            Gets the version from an incomming message. Returns true if
+            the provided <paramref name="versionId"/> is newer then the
+            latest known version, otherwise false.
+            </summary>
+        </member>
+        <member name="M:MessageBus.Decorations.Versioning.IVersionDetection`1.ForgetVersion(`0)">
+            <summary>
+            Instructs the version detection to forget about the provided
+            <paramref name="versionId"/>. A future call to <see cref="M:MessageBus.Decorations.Versioning.IVersionDetection`1.HandleMessageVersion(`0)"/>
+            must return true for the same version id again.
+            </summary>
+        </member>
         <member name="M:MessageBus.AutomaticRetryMessageHandlerExtensions.WithRetryOnException``1(MessageBus.IAsyncMessageCommandHandler{``0})">
             <summary>
             Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
@@ -80,6 +126,70 @@
             Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
             If an exception occurs and the provided <paramref name="shouldRetry"/> function returns true, the command will get scheduled again.
             Note that there is no maximum retry count.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageEventHandler{``0})">
+            <summary>
+            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The default version handler will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageEventHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
+            <summary>
+            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageEventHandler{``0})">
+            <summary>
+            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The default version handler will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageEventHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
+            <summary>
+            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageCommandHandler{``0})">
+            <summary>
+            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The default version handler will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageCommandHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
+            <summary>
+            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageCommandHandler{``0})">
+            <summary>
+            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The default version handler will get used.
+            </summary>
+            <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
+            will implement that interface as well.</remarks>
+        </member>
+        <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageCommandHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
+            <summary>
+            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
             will implement that interface as well.</remarks>
