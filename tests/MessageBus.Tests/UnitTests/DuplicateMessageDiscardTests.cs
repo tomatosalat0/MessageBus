@@ -8,11 +8,32 @@ namespace MessageBus.Tests.UnitTests
     public class DuplicateMessageDiscardTests
     {
         [TestMethod]
-        public async Task DiscardDuplicateExtensionWillDiscardDuplicates()
+        public async Task MultipleIdenticalEventsWillGetDiscarded()
         {
             using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
-            CounterHandler handler = new CounterHandler();
+            EventCounterHandler handler = new EventCounterHandler();
+            bus.RegisterEventHandler(handler
+                .WithDuplicateMessageDetection()
+            );
+
+            MyEvent scheduledEvent = new MyEvent();
+            await bus.FireEvent(scheduledEvent);
+            await bus.FireEvent(scheduledEvent);
+            await bus.FireEvent(scheduledEvent);
+
+            // cheap way: just wait a little bit until the events got executed
+            await Task.Delay(200);
+
+            Assert.AreEqual(1, handler.CallCount);
+        }
+
+        [TestMethod]
+        public async Task MultipleIdenticalCommandsWillGetDiscarded()
+        {
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
+
+            CommandCounterHandler handler = new CommandCounterHandler();
             bus.RegisterCommandHandler(handler
                 .WithDuplicateMessageDetection()
             );
@@ -25,6 +46,11 @@ namespace MessageBus.Tests.UnitTests
             Assert.AreEqual(1, handler.CallCount);
         }
 
+        [Topic("Events/MyEvent")]
+        public class MyEvent : IMessageEvent
+        {
+            public MessageId MessageId { get; } = MessageId.NewId();
+        }
 
         [Topic("Commands/MyCommand")]
         public class MyCommand : IMessageCommand
@@ -32,7 +58,19 @@ namespace MessageBus.Tests.UnitTests
             public MessageId MessageId { get; } = MessageId.NewId();
         }
 
-        public class CounterHandler : IMessageCommandHandler<MyCommand>
+        public class EventCounterHandler : IMessageEventHandler<MyEvent>
+        {
+            private int _callCount;
+
+            public int CallCount => _callCount;
+
+            public void Handle(MyEvent @event)
+            {
+                ++_callCount;
+            }
+        }
+
+        public class CommandCounterHandler : IMessageCommandHandler<MyCommand>
         {
             private int _callCount;
 
