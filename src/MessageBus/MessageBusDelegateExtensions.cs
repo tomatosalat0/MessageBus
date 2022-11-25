@@ -5,56 +5,104 @@ namespace MessageBus
 {
     public static class MessageBusDelegateExtensions
     {
-        public static IDisposable RegisterEventDelegate<TEvent>(this IMessageBusHandler subscriptionHandler, Action<TEvent> eventHandler)
+        public static IDisposable RegisterEventDelegate<TEvent>(
+            this IMessageBusHandler subscriptionHandler,
+            Action<TEvent> eventHandler,
+            Func<IMessageEventHandler<TEvent>, IMessageEventHandler<TEvent>>? configure = null)
             where TEvent : IMessageEvent
         {
-            return subscriptionHandler.RegisterEventHandler(new DelegateEventHandler<TEvent>(eventHandler));
+            IMessageEventHandler<TEvent> handler = new DelegateEventHandler<TEvent>(eventHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterEventHandler(handler);
         }
 
-        public static IDisposable RegisterEventDelegateAsync<TEvent>(this IMessageBusHandler subscriptionHandler, Func<TEvent, Task> eventHandler)
+        public static IDisposable RegisterEventDelegateAsync<TEvent>(
+            this IMessageBusHandler subscriptionHandler,
+            Func<TEvent, Task> eventHandler,
+            Func<IAsyncMessageEventHandler<TEvent>, IAsyncMessageEventHandler<TEvent>>? configure = null)
             where TEvent : IMessageEvent
         {
-            return subscriptionHandler.RegisterEventHandler(new AsyncDelegateEventHandler<TEvent>(eventHandler));
+            IAsyncMessageEventHandler<TEvent> handler = new AsyncDelegateEventHandler<TEvent>(eventHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterEventHandler(handler);
         }
 
-        public static IDisposable RegisterQueryDelegate<TQuery, TQueryResult>(this IMessageBusHandler subscriptionHandler, Func<TQuery, TQueryResult> queryHandler)
+        public static IDisposable RegisterQueryDelegate<TQuery, TQueryResult>(
+            this IMessageBusHandler subscriptionHandler,
+            Func<TQuery, TQueryResult> queryHandler,
+            Func<IMessageQueryHandler<TQuery, TQueryResult>, IMessageQueryHandler<TQuery, TQueryResult>>? configure = null)
             where TQuery : IMessageQuery<TQueryResult>
             where TQueryResult : IMessageQueryResult
         {
-            return subscriptionHandler.RegisterQueryHandler(new QueryHandler<TQuery, TQueryResult>(queryHandler));
+            IMessageQueryHandler<TQuery, TQueryResult> handler = new QueryHandler<TQuery, TQueryResult>(queryHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterQueryHandler(handler);
         }
 
-        public static IDisposable RegisterQueryDelegateAsync<TQuery, TQueryResult>(this IMessageBusHandler subscriptionHandler, Func<TQuery, Task<TQueryResult>> queryHandler)
+        public static IDisposable RegisterQueryDelegateAsync<TQuery, TQueryResult>(
+            this IMessageBusHandler subscriptionHandler,
+            Func<TQuery, Task<TQueryResult>> queryHandler,
+            Func<IAsyncMessageQueryHandler<TQuery, TQueryResult>, IAsyncMessageQueryHandler<TQuery, TQueryResult>>? configure = null)
             where TQuery : IMessageQuery<TQueryResult>
             where TQueryResult : IMessageQueryResult
         {
-            return subscriptionHandler.RegisterQueryHandler(new AsyncQueryHandler<TQuery, TQueryResult>(queryHandler));
+            IAsyncMessageQueryHandler<TQuery, TQueryResult> handler = new AsyncQueryHandler<TQuery, TQueryResult>(queryHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterQueryHandler(handler);
         }
 
-        public static IDisposable RegisterCommandDelegate<TCommand>(this IMessageBusHandler subscriptionHandler, Action<TCommand> commandHandler)
+        public static IDisposable RegisterCommandDelegate<TCommand>(
+            this IMessageBusHandler subscriptionHandler,
+            Action<TCommand> commandHandler,
+            Func<IMessageCommandHandler<TCommand>, IMessageCommandHandler<TCommand>>? configure = null)
             where TCommand : IMessageCommand
         {
-            return subscriptionHandler.RegisterCommandHandler(new CommandHandler<TCommand>(commandHandler));
+            IMessageCommandHandler<TCommand> handler = new CommandHandler<TCommand>(commandHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterCommandHandler(handler);
         }
 
-        public static IDisposable RegisterCommandDelegateAsync<TCommand>(this IMessageBusHandler subscriptionHandler, Func<TCommand, Task> commandHandler)
+        public static IDisposable RegisterCommandDelegateAsync<TCommand>(
+            this IMessageBusHandler subscriptionHandler,
+            Func<TCommand, Task> commandHandler,
+            Func<IAsyncMessageCommandHandler<TCommand>, IAsyncMessageCommandHandler<TCommand>>? configure = null)
             where TCommand : IMessageCommand
         {
-            return subscriptionHandler.RegisterCommandHandler(new AsyncCommandHandler<TCommand>(commandHandler));
+            IAsyncMessageCommandHandler<TCommand> handler = new AsyncCommandHandler<TCommand>(commandHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterCommandHandler(handler);
         }
 
-        public static IDisposable RegisterRpcDelegate<TRpc, TRpcResult>(this IMessageBusHandler subscriptionHandler, Func<TRpc, TRpcResult> queryHandler)
+        public static IDisposable RegisterRpcDelegate<TRpc, TRpcResult>(
+            this IMessageBusHandler subscriptionHandler,
+            Func<TRpc, TRpcResult> queryHandler,
+            Func<IMessageRpcHandler<TRpc, TRpcResult>, IMessageRpcHandler<TRpc, TRpcResult>>? configure = null)
             where TRpc : IMessageRpc<TRpcResult>
             where TRpcResult : IMessageRpcResult
         {
+            IMessageRpcHandler<TRpc, TRpcResult> handler = new RpcHandler<TRpc, TRpcResult>(queryHandler);
+            if (configure is not null)
+                handler = configure(handler);
             return subscriptionHandler.RegisterRpcHandler(new RpcHandler<TRpc, TRpcResult>(queryHandler));
         }
 
-        public static IDisposable RegisterRpcDelegateAsync<TRpc, TRpcResult>(this IMessageBusHandler subscriptionHandler, Func<TRpc, Task<TRpcResult>> queryHandler)
+        public static IDisposable RegisterRpcDelegateAsync<TRpc, TRpcResult>(
+            this IMessageBusHandler subscriptionHandler,
+            Func<TRpc, Task<TRpcResult>> queryHandler,
+            Func<IAsyncMessageRpcHandler<TRpc, TRpcResult>, IAsyncMessageRpcHandler<TRpc, TRpcResult>>? configure = null)
             where TRpc : IMessageRpc<TRpcResult>
             where TRpcResult : IMessageRpcResult
         {
-            return subscriptionHandler.RegisterRpcHandler(new AsyncRpcHandler<TRpc, TRpcResult>(queryHandler));
+            IAsyncMessageRpcHandler<TRpc, TRpcResult> handler = new AsyncRpcHandler<TRpc, TRpcResult>(queryHandler);
+            if (configure is not null)
+                handler = configure(handler);
+            return subscriptionHandler.RegisterRpcHandler(handler);
         }
 
         private class DelegateEventHandler<TEvent> : IMessageEventHandler<TEvent> where TEvent : IMessageEvent

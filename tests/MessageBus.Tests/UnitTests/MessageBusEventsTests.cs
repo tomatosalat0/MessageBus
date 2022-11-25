@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MessageBus.Messaging.InProcess;
@@ -10,9 +11,8 @@ namespace MessageBus.Tests.UnitTests
     [TestClass]
     public class MessageBusEventsTests
     {
-
         [TestMethod]
-        public void EventHandlerIsCalledForEvents()
+        public async Task EventHandlerIsCalledForEvents()
         {
             ManualScheduler scheduler = new ManualScheduler();
             using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
@@ -21,14 +21,14 @@ namespace MessageBus.Tests.UnitTests
             bus.RegisterEventDelegate<TestEventA>(m => numberOfCalls++);
             TestEventA @event = new TestEventA();
 
-            bus.FireEvent(@event);
+            await bus.FireEvent(@event);
             scheduler.Drain();
 
             Assert.AreEqual(1, numberOfCalls);
         }
 
         [TestMethod]
-        public void EventHandlerIsOnlyCalledForRegisteredEvents()
+        public async Task EventHandlerIsOnlyCalledForRegisteredEvents()
         {
             ManualScheduler scheduler = new ManualScheduler();
             using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
@@ -37,7 +37,7 @@ namespace MessageBus.Tests.UnitTests
             bus.RegisterEventDelegate<TestEventA>(m => numberOfCalls++);
             TestEventB @event = new TestEventB();
 
-            bus.FireEvent(@event);
+            await bus.FireEvent(@event);
             scheduler.Drain();
 
             Assert.AreEqual(0, numberOfCalls);
@@ -59,7 +59,6 @@ namespace MessageBus.Tests.UnitTests
             TestEventA @event = new TestEventA();
 
             await bus.FireEvent(@event);
-
             await Task.Delay(1000);
 
             Assert.IsInstanceOfType(raisedException, typeof(NotSupportedException));
@@ -87,6 +86,28 @@ namespace MessageBus.Tests.UnitTests
             Assert.AreEqual(1, numberOfCalls);
         }
 
+        [TestMethod]
+        public async Task EventHandlerWithConfigurationIsApplied()
+        {
+            ManualScheduler scheduler = new ManualScheduler();
+            using IMessageBus bus = new MessageBrokerMessageBus(new InProcessMessageBroker(MessageBrokerOptions.BlockingManual(scheduler)), NoExceptionNotification.Instance);
+
+            MonitorDuplicationHandler duplicationHandler = new MonitorDuplicationHandler();
+            int numberOfCalls = 0;
+            bus.RegisterEventDelegate<TestEventA>(
+                m => numberOfCalls++, 
+                (hander) => hander.WithDuplicateMessageDetection(duplicationHandler)
+            );
+            TestEventA @event = new TestEventA();
+
+            await bus.FireEvent(@event);
+            scheduler.Drain();
+
+            Assert.AreEqual(1, numberOfCalls);
+            Assert.AreEqual(1, duplicationHandler.SeenMessages.Count);
+            Assert.AreEqual(@event.MessageId, duplicationHandler.SeenMessages[0]);
+        }
+
         [Topic("Events/TestEventA")]
         private class TestEventA : IMessageEvent
         {
@@ -108,6 +129,21 @@ namespace MessageBus.Tests.UnitTests
             bus.RegisterEventHandler(handler);
 
             Assert.IsNotNull(handler.Subscription);
+        }
+
+        private class MonitorDuplicationHandler : Decorations.Duplications.IDuplicateDetection
+        {
+            public List<MessageId> SeenMessages { get; } = new List<MessageId>();
+
+            public void ForgetMessage(MessageId messageId)
+            {
+            }
+
+            public bool HandleReceivedMessage(MessageId messageId)
+            {
+                SeenMessages.Add(messageId);
+                return true;
+            }
         }
 
         private class SubscriptionAwareEventHandler : IMessageEventHandler<TestEventA>, ISubscriptionAwareHandler
