@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Reflection;
 using MessageBus.Messaging;
 
@@ -54,7 +55,7 @@ namespace MessageBus
 
         private static TopicName ReadTopicNameFromAttribute(Type type)
         {
-            TopicAttribute? attribute = type.GetCustomAttribute<TopicAttribute>();
+            TopicAttribute? attribute = TryReadAttribute<TopicAttribute>(type);
             if (attribute is null)
                 throw new IncompleteConfigurationException($"The event '{type.FullName}' doesn't have the required Topic attribute.");
 
@@ -63,7 +64,7 @@ namespace MessageBus
 
         private static ISubscriptionOptions? ReadTopicOptionsFromAttribute(Type type)
         {
-            TopicOptionsAttribute? attribute = type.GetCustomAttribute<TopicOptionsAttribute>();
+            TopicOptionsAttribute? attribute = TryReadAttribute<TopicOptionsAttribute>(type);
             if (attribute is null || attribute.Type is null)
                 return null;
 
@@ -72,6 +73,18 @@ namespace MessageBus
                 return null;
 
             return optionsProvider.Invoke(null, null) as ISubscriptionOptions;
+        }
+
+        private static TAttribute? TryReadAttribute<TAttribute>(Type typeToSearchIn) where TAttribute : Attribute
+        {
+            TAttribute? result = typeToSearchIn.GetCustomAttribute<TAttribute>(inherit: true);
+            if (result is not null)
+                return result;
+
+            return typeToSearchIn.GetInterfaces()
+                .Select(p => p.GetCustomAttribute<TAttribute>())
+                .Where(p => p is not null)
+                .FirstOrDefault();
         }
 
         private void Dispose(bool disposing)
