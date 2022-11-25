@@ -82,6 +82,37 @@
             must return true for the same message id again.
             </summary>
         </member>
+        <member name="M:MessageBus.Decorations.Validations.IMessageValidator`1.Validate(`0)">
+            <summary>
+            Execute the validation for the provided <paramref name="message"/> and
+            returns the result of that validation.
+            </summary>
+        </member>
+        <member name="M:MessageBus.Decorations.Validations.IAsyncMessageValidator`1.ValidateAsync(`0)">
+            <summary>
+            Execute the validation for the provided <paramref name="message"/> and
+            returns the result of that validation.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Decorations.Validations.IValidationResult.Errors">
+            <summary>
+            Contains the list of validation errors. If no
+            error occured, this list will be empty.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Decorations.Validations.IValidationError.ErrorMessage">
+            <summary>
+            The message describing the validation problem.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Decorations.Versioning.IHasMessageVersion`1.MessageVersion">
+            <summary>
+            Indicates the version of this message. Note that this version is not
+            a schema version. Each new message must get a new increasing version.
+            If a message is comming in out of order (old version), it will get
+            dropped.
+            </summary>
+        </member>
         <member name="M:MessageBus.Decorations.Versioning.IVersionDetection`1.HandleMessageVersion(`0)">
             <summary>
             Gets the version from an incomming message. Returns true if
@@ -130,9 +161,90 @@
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
             will implement that interface as well.</remarks>
         </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``1(MessageBus.IAsyncMessageCommandHandler{``0},MessageBus.Decorations.Validations.IAsyncMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided async <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``1(MessageBus.IAsyncMessageCommandHandler{``0},MessageBus.Decorations.Validations.IMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``1(MessageBus.IMessageCommandHandler{``0},MessageBus.Decorations.Validations.IMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``2(MessageBus.IAsyncMessageQueryHandler{``0,``1},MessageBus.Decorations.Validations.IAsyncMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``2(MessageBus.IAsyncMessageQueryHandler{``0,``1},MessageBus.Decorations.Validations.IMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``2(MessageBus.IMessageQueryHandler{``0,``1},MessageBus.Decorations.Validations.IMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``2(MessageBus.IAsyncMessageRpcHandler{``0,``1},MessageBus.Decorations.Validations.IAsyncMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``2(MessageBus.IAsyncMessageRpcHandler{``0,``1},MessageBus.Decorations.Validations.IMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
+        <member name="M:MessageBus.PrependValidationHandlerExtensions.WithValidation``2(MessageBus.IMessageRpcHandler{``0,``1},MessageBus.Decorations.Validations.IMessageValidator{``0}[])">
+            <summary>
+            Prepends the provided <paramref name="validators"/> to the current <paramref name="handler"/>. These validators
+            will get executed before the underlying <paramref name="handler"/> will get called. If any validator
+            indicates an error, an <see cref="T:MessageBus.Decorations.Validations.MessageValidationException"/> will get thrown and the underlying handler
+            won't get executed.
+            </summary>
+            <remarks>If the list of <paramref name="validators"/> is empty, the provided <paramref name="handler"/> will get returned.</remarks>
+        </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageEventHandler{``0})">
             <summary>
-            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new async handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The default version handler will get used.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -140,7 +252,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageEventHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
             <summary>
-            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new async handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -148,7 +260,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageEventHandler{``0})">
             <summary>
-            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The default version handler will get used.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -156,7 +268,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageEventHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
             <summary>
-            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -164,7 +276,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageCommandHandler{``0})">
             <summary>
-            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new async handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The default version handler will get used.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -172,7 +284,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IAsyncMessageCommandHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
             <summary>
-            Returns a new async handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new async handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -180,7 +292,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageCommandHandler{``0})">
             <summary>
-            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The default version handler will get used.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -188,7 +300,7 @@
         </member>
         <member name="M:MessageBus.DiscardOldMessageVersionsHandlerExtensions.WithDiscardOldMessageVersion``2(MessageBus.IMessageCommandHandler{``0},MessageBus.Decorations.Versioning.IVersionDetection{``1})">
             <summary>
-            Returns a new handler which will detect outdated messages. Messages which have a lower version compared to the latest one
+            Returns a new handler which will detect outdated messages. Messages which have a lower or equal version compared to the latest one
             will get dropped silently. The provided <paramref name="versionDetection"/> will get used to detect outdated messages.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
