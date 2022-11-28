@@ -127,6 +127,24 @@
             must return true for the same version id again.
             </summary>
         </member>
+        <member name="M:MessageBus.OnlyHandleWhenMessageHandlerExtensions.OnlyWhen``1(MessageBus.IAsyncMessageEventHandler{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Limit the underlying <paramref name="handler"/> to only receive messages when the provided <paramref name="precondition"/>
+            returns true.
+            </summary>
+        </member>
+        <member name="M:MessageBus.OnlyHandleWhenMessageHandlerExtensions.OnlyWhen``1(MessageBus.IAsyncMessageEventHandler{``0},System.Func{``0,System.Threading.Tasks.Task{System.Boolean}})">
+            <summary>
+            Limit the underlying <paramref name="handler"/> to only receive messages when the provided async <paramref name="precondition"/>
+            returns true.
+            </summary>
+        </member>
+        <member name="M:MessageBus.OnlyHandleWhenMessageHandlerExtensions.OnlyWhen``1(MessageBus.IMessageEventHandler{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Limit the underlying <paramref name="handler"/> to only receive messages when the provided <paramref name="precondition"/>
+            returns true.
+            </summary>
+        </member>
         <member name="M:MessageBus.AutomaticRetryMessageHandlerExtensions.WithRetryOnException``1(MessageBus.IAsyncMessageCommandHandler{``0})">
             <summary>
             Returns a new handler which will detect capture exceptions thrown by previous <paramref name="handler"/>.
