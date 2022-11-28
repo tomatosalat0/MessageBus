@@ -167,6 +167,21 @@ namespace MessageBus.Tests.UnitTests
             Assert.AreEqual(0, handler.MyEvent_Incomplete_Calls);
         }
 
+        [TestMethod]
+        public async Task RegistrationSupportsQueryHandler()
+        {
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
+
+            MyMultiQueryHandler handler = new MyMultiQueryHandler();
+            bus.RegisterAllQueryHandlers(handler);
+
+            MyQueryAResult resultA = await bus.FireQuery<MyQueryA, MyQueryAResult>(new MyQueryA(), TimeSpan.FromSeconds(2));
+            MyQueryBResult resultB = await bus.FireQuery<MyQueryB, MyQueryBResult>(new MyQueryB(), TimeSpan.FromSeconds(2));
+
+            Assert.AreEqual(10, resultA.ResultA);
+            Assert.AreEqual(42, resultB.ResultB);
+        }
+
         [Topic("Events/EventA")]
         public class MyEventA : IMessageEvent
         {
@@ -233,7 +248,57 @@ namespace MessageBus.Tests.UnitTests
             {
                 MyEvent_Incomplete_Calls++;
             }
+        }
 
+        [Topic("Queries/MyQueryA")]
+        public class MyQueryA : IMessageQuery<MyQueryAResult>
+        {
+            public MessageId MessageId { get; } = MessageId.NewId();
+        }
+
+        public class MyQueryAResult : IMessageQueryResult
+        {
+            public MyQueryAResult(MessageId messageId)
+            {
+                MessageId = messageId;
+            }
+
+            public MessageId MessageId { get; }
+
+            public int ResultA { get; } = 10;
+        }
+
+        [Topic("Queries/MyQueryB")]
+        public class MyQueryB : IMessageQuery<MyQueryBResult>
+        {
+            public MessageId MessageId { get; } = MessageId.NewId();
+        }
+
+        public class MyQueryBResult : IMessageQueryResult
+        {
+            public MyQueryBResult(MessageId messageId)
+            {
+                MessageId = messageId;
+            }
+
+            public MessageId MessageId { get; }
+
+            public int ResultB { get; } = 42;
+        }
+
+        private class MyMultiQueryHandler :
+            IMessageQueryHandler<MyQueryA, MyQueryAResult>,
+            IMessageQueryHandler<MyQueryB, MyQueryBResult>
+        {
+            public MyQueryAResult Handle(MyQueryA query)
+            {
+                return new MyQueryAResult(query.MessageId);
+            }
+
+            public MyQueryBResult Handle(MyQueryB query)
+            {
+                return new MyQueryBResult(query.MessageId);
+            }
         }
 
         private class NoopDispose : IDisposable

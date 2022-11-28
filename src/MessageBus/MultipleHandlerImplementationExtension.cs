@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MessageBus.Messaging;
 
 namespace MessageBus
 {
@@ -33,8 +32,8 @@ namespace MessageBus
                 explicitInterfaceMethodName: $"{typeof(IMessageBusHandler).FullName}.{nameof(IMessageBusHandler.RegisterEventHandler)}",
                 interfaceTypes: new[]
                 {
-                    typeof(IMessageEventHandler<>),
-                    typeof(IAsyncMessageEventHandler<>)
+                    (typeof(IMessageEventHandler<>), 1),
+                    (typeof(IAsyncMessageEventHandler<>), 1)
                 });
         }
 
@@ -63,8 +62,68 @@ namespace MessageBus
                 explicitInterfaceMethodName: $"{typeof(IMessageBusHandler).FullName}.{nameof(IMessageBusHandler.RegisterCommandHandler)}",
                 interfaceTypes: new[]
                 {
-                    typeof(IMessageCommandHandler<>),
-                    typeof(IAsyncMessageCommandHandler<>)
+                    (typeof(IMessageCommandHandler<>), 1),
+                    (typeof(IAsyncMessageCommandHandler<>), 1)
+                });
+        }
+
+        /// <summary>
+        /// Searches for all <see cref="IMessageQueryHandler{TQuery, TQueryResult}"/> or <see cref="IAsyncMessageQueryHandler{TQuery, TQueryResult}"/>
+        /// implementations within the instance of <paramref name="handler"/> and registers each implementation
+        /// to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+        /// returned by <see cref="IMessageBusHandler.RegisterQueryHandler{TQuery, TQueryResult}(IMessageQueryHandler{TQuery, TQueryResult})"/> or
+        /// <see cref="IMessageBusHandler.RegisterQueryHandler{TQuery, TQueryResult}(IAsyncMessageQueryHandler{TQuery, TQueryResult})"/>.
+        /// </summary>
+        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// this method will get rolled back.</remarks>
+        /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="IMessageQueryHandler{TQuery, TQueryResult}"/>
+        /// or <see cref="IAsyncMessageQueryHandler{TQuery, TQueryResult}"/>.</exception>
+        /// <exception cref="TargetInvocationException">Is thrown if the registration failed.</exception>
+        public static IReadOnlyList<IDisposable> RegisterAllQueryHandlers(this IMessageBusHandler messageBus, object handler)
+        {
+            if (handler is null) throw new ArgumentNullException(nameof(handler));
+
+            return RegisterAllHandlers(
+                messageBus,
+                handler,
+                registerMethodName: nameof(IMessageBusHandler.RegisterQueryHandler),
+                explicitInterfaceMethodName: $"{typeof(IMessageBusHandler).FullName}.{nameof(IMessageBusHandler.RegisterQueryHandler)}",
+                interfaceTypes: new[]
+                {
+                    (typeof(IMessageQueryHandler<,>), 2),
+                    (typeof(IAsyncMessageQueryHandler<,>), 2)
+                });
+        }
+
+        /// <summary>
+        /// Searches for all <see cref="IMessageRpcHandler{TRpc, TRpcResult}"/> or <see cref="IAsyncMessageRpcHandler{TRpc, TRpcResult}"/>
+        /// implementations within the instance of <paramref name="handler"/> and registers each implementation
+        /// to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+        /// returned by <see cref="IMessageBusHandler.RegisterRpcHandler{TRpc, TRpcResult}(IMessageRpcHandler{TRpc, TRpcResult})"/> or
+        /// <see cref="IMessageBusHandler.RegisterRpcHandler{TRpc, TRpcResult}(IAsyncMessageRpcHandler{TRpc, TRpcResult})"/>.
+        /// </summary>
+        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// this method will get rolled back.</remarks>
+        /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="IMessageRpcHandler{TRpc, TRpcResult}"/>
+        /// or <see cref="IAsyncMessageRpcHandler{TRpc, TRpcResult}"/>.</exception>
+        /// <exception cref="TargetInvocationException">Is thrown if the registration failed.</exception>
+        public static IReadOnlyList<IDisposable> RegisterAllRpcHandlers(this IMessageBusHandler messageBus, object handler)
+        {
+            if (handler is null) throw new ArgumentNullException(nameof(handler));
+
+            return RegisterAllHandlers(
+                messageBus,
+                handler,
+                registerMethodName: nameof(IMessageBusHandler.RegisterRpcHandler),
+                explicitInterfaceMethodName: $"{typeof(IMessageBusHandler).FullName}.{nameof(IMessageBusHandler.RegisterRpcHandler)}",
+                interfaceTypes: new[]
+                {
+                    (typeof(IMessageRpcHandler<,>), 2),
+                    (typeof(IAsyncMessageRpcHandler<,>), 2)
                 });
         }
 
@@ -73,17 +132,17 @@ namespace MessageBus
             object handler,
             string registerMethodName,
             string explicitInterfaceMethodName,
-            IReadOnlyList<Type> interfaceTypes)
+            IReadOnlyList<(Type HandlerType, int MessageTypeCount)> interfaceTypes)
         {
             List<IDisposable> result = new List<IDisposable>();
             try
             {
-                foreach (Type interfaceType in interfaceTypes)
+                foreach ((Type HandlerType, int MessageTypeCount) pair in interfaceTypes)
                 {
-                    MethodInfo registerEventHandler = GetRegistrationMethod(messageBus, registerMethodName, explicitInterfaceMethodName, interfaceType);
+                    MethodInfo registerEventHandler = GetRegistrationMethod(messageBus, registerMethodName, explicitInterfaceMethodName, pair.HandlerType);
                     result.AddRange(
-                        CollectInterfaceGenericTypes(handler, interfaceType)
-                            .Select(eventType => AssignHandler(messageBus, handler, registerEventHandler, eventType))
+                        CollectInterfaceGenericTypes(handler, pair.HandlerType, pair.MessageTypeCount)
+                            .Select(eventTypes => AssignHandler(messageBus, handler, registerEventHandler, eventTypes))
                     );
                 }
             }
@@ -105,11 +164,11 @@ namespace MessageBus
         /// <summary>
         /// Calls the event registration method of <paramref name="messageBus"/> within the instance provided by <paramref name="handler"/>.
         /// The method to call is defined by <paramref name="invoke"/>. Because the registration methods have a generic type parameter,
-        /// the provided <paramref name="eventType"/> defines the actual type to pass.
+        /// the provided <paramref name="eventTypes"/> defines the actual types to pass.
         /// </summary>
-        private static IDisposable AssignHandler(IMessageBusHandler messageBus, object handler, MethodInfo invoke, Type eventType)
+        private static IDisposable AssignHandler(IMessageBusHandler messageBus, object handler, MethodInfo invoke, Type[] eventTypes)
         {
-            object? subscription = invoke.MakeGenericMethod(eventType).Invoke(messageBus, new[] { handler });
+            object? subscription = invoke.MakeGenericMethod(eventTypes).Invoke(messageBus, new[] { handler });
             if (subscription is not IDisposable disposableSubscription)
                 throw new InvalidOperationException($"Registration did not return a disposable");
             return disposableSubscription;
@@ -119,15 +178,15 @@ namespace MessageBus
         /// Return the generic type of all interfaces of the given <paramref name="interfaceType"/> which
         /// are implemented by the provided <paramref name="handler"/>.
         /// </summary>
-        private static IEnumerable<Type> CollectInterfaceGenericTypes(object handler, Type interfaceType)
+        private static IEnumerable<Type[]> CollectInterfaceGenericTypes(object handler, Type interfaceType, int expectedGenericArgumentCount)
         {
             return handler
                 .GetType()
                 .GetInterfaces()
                 .Where(p => p.IsGenericType)
                 .Where(p => p.GetGenericTypeDefinition() == interfaceType)
-                .Select(p => p.GetGenericArguments().FirstOrDefault())
-                .WhereNotNull();
+                .Select(p => p.GetGenericArguments())
+                .Where(p => p.Length == expectedGenericArgumentCount);
         }
 
         private static MethodInfo GetRegistrationMethod(IMessageBusHandler messageBus, string methodName, string explicitMethodName, Type eventHandlerInterfaceType)

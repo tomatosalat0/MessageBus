@@ -657,14 +657,46 @@
             or <see cref="T:MessageBus.IAsyncMessageCommandHandler`1"/>.</exception>
             <exception cref="T:System.Reflection.TargetInvocationException">Is thrown if the registration failed.</exception>
         </member>
-        <member name="M:MessageBus.MultipleHandlerImplementationExtension.AssignHandler(MessageBus.IMessageBusHandler,System.Object,System.Reflection.MethodInfo,System.Type)">
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.RegisterAllQueryHandlers(MessageBus.IMessageBusHandler,System.Object)">
+            <summary>
+            Searches for all <see cref="T:MessageBus.IMessageQueryHandler`2"/> or <see cref="T:MessageBus.IAsyncMessageQueryHandler`2"/>
+            implementations within the instance of <paramref name="handler"/> and registers each implementation
+            to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+            returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterQueryHandler``2(MessageBus.IMessageQueryHandler{``0,``1})"/> or
+            <see cref="M:MessageBus.IMessageBusHandler.RegisterQueryHandler``2(MessageBus.IAsyncMessageQueryHandler{``0,``1})"/>.
+            </summary>
+            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            this method will get rolled back.</remarks>
+            <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="T:MessageBus.IMessageQueryHandler`2"/>
+            or <see cref="T:MessageBus.IAsyncMessageQueryHandler`2"/>.</exception>
+            <exception cref="T:System.Reflection.TargetInvocationException">Is thrown if the registration failed.</exception>
+        </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.RegisterAllRpcHandlers(MessageBus.IMessageBusHandler,System.Object)">
+            <summary>
+            Searches for all <see cref="T:MessageBus.IMessageRpcHandler`2"/> or <see cref="T:MessageBus.IAsyncMessageRpcHandler`2"/>
+            implementations within the instance of <paramref name="handler"/> and registers each implementation
+            to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+            returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterRpcHandler``2(MessageBus.IMessageRpcHandler{``0,``1})"/> or
+            <see cref="M:MessageBus.IMessageBusHandler.RegisterRpcHandler``2(MessageBus.IAsyncMessageRpcHandler{``0,``1})"/>.
+            </summary>
+            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            this method will get rolled back.</remarks>
+            <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="T:MessageBus.IMessageRpcHandler`2"/>
+            or <see cref="T:MessageBus.IAsyncMessageRpcHandler`2"/>.</exception>
+            <exception cref="T:System.Reflection.TargetInvocationException">Is thrown if the registration failed.</exception>
+        </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.AssignHandler(MessageBus.IMessageBusHandler,System.Object,System.Reflection.MethodInfo,System.Type[])">
             <summary>
             Calls the event registration method of <paramref name="messageBus"/> within the instance provided by <paramref name="handler"/>.
             The method to call is defined by <paramref name="invoke"/>. Because the registration methods have a generic type parameter,
-            the provided <paramref name="eventType"/> defines the actual type to pass.
+            the provided <paramref name="eventTypes"/> defines the actual types to pass.
             </summary>
         </member>
-        <member name="M:MessageBus.MultipleHandlerImplementationExtension.CollectInterfaceGenericTypes(System.Object,System.Type)">
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.CollectInterfaceGenericTypes(System.Object,System.Type,System.Int32)">
             <summary>
             Return the generic type of all interfaces of the given <paramref name="interfaceType"/> which
             are implemented by the provided <paramref name="handler"/>.
