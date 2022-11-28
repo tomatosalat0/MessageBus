@@ -11,16 +11,22 @@ namespace MessageBus
     /// </summary>
     public sealed partial class MessageBrokerMessageBus : IMessageBus, IDisposable
     {
-        private readonly ConcurrentDictionary<Type, TopicName> _topicNameCache = new ConcurrentDictionary<Type, TopicName>();
+        private readonly ITopicNameProvider _topicNameProvider;
         private readonly ConcurrentDictionary<Type, ISubscriptionOptions?> _topicOptionsCache = new ConcurrentDictionary<Type, ISubscriptionOptions?>();
         private readonly IExceptionNotification _exceptionNotification;
         private readonly IMessageBroker _broker;
         private bool _disposedValue;
 
         public MessageBrokerMessageBus(IMessageBroker broker, IExceptionNotification exceptionNotification)
+            : this(broker, exceptionNotification, new TopicNameCache(new AttributeTopicNameProvider()))
+        {
+        }
+
+        public MessageBrokerMessageBus(IMessageBroker broker, IExceptionNotification exceptionNotification, ITopicNameProvider topicNameProvider)
         {
             _broker = broker;
             _exceptionNotification = exceptionNotification ?? throw new ArgumentNullException(nameof(exceptionNotification));
+            _topicNameProvider = topicNameProvider ?? throw new ArgumentNullException(nameof(topicNameProvider));
         }
 
         private TopicName GetSuccessOutcomeTopicName<TType>(TType request)
@@ -45,21 +51,12 @@ namespace MessageBus
 
         private TopicName GetTopicNameFromType(Type type)
         {
-            return _topicNameCache.GetOrAdd(type, ReadTopicNameFromAttribute);
+            return _topicNameProvider.GetTopic(type);
         }
 
         private ISubscriptionOptions? GetTopicOptionsFromType(Type type)
         {
             return _topicOptionsCache.GetOrAdd(type, ReadTopicOptionsFromAttribute);
-        }
-
-        private static TopicName ReadTopicNameFromAttribute(Type type)
-        {
-            TopicAttribute? attribute = TryReadAttribute<TopicAttribute>(type);
-            if (attribute is null)
-                throw new IncompleteConfigurationException($"The event '{type.FullName}' doesn't have the required Topic attribute.");
-
-            return attribute.Topic;
         }
 
         private static ISubscriptionOptions? ReadTopicOptionsFromAttribute(Type type)
