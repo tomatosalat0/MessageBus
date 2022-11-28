@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -203,6 +202,22 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
         }
 
         [TestMethod]
+        public void InterfaceWithInhertanceSerializeAndDeserializeSupport()
+        {
+            IMessageSerializer serializer = new JsonMessageSerializer()
+                .WithInterfaceDeserializer();
+
+            SubTypeImpl original = new SubTypeImpl() { Additional = "extra", StringValue = "test value", SubType = 42 };
+            byte[] inputJson = serializer.Serialize(original);
+            ISubType instance = serializer.Deserialize<ISubType>(inputJson);
+
+            Assert.AreNotSame(original, instance);
+            Assert.AreEqual("test value", instance.StringValue);
+            Assert.AreEqual(42, instance.SubType);
+            Assert.AreEqual("extra", instance.Additional);
+        }
+
+        [TestMethod]
         public void InterfaceSerializationSupportsReadOnlyStructProperty()
         {
             IMessageSerializer serializer = new JsonMessageSerializer()
@@ -294,6 +309,15 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
         public interface ISubType : IReadWrite, IAdditionalData
         {
             public int SubType { get; }
+        }
+
+        public class SubTypeImpl : ISubType
+        {
+            public int SubType { get; init; }
+
+            public string StringValue { get; set; }
+
+            public string Additional { get; init; }
         }
 
         public interface IWithGenericList
