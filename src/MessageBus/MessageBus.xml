@@ -4,6 +4,11 @@
         <name>MessageBus</name>
     </assembly>
     <members>
+        <member name="T:MessageBus.AttributeTopicNameProvider">
+            <summary>
+            Returns the topic name from the <see cref="T:MessageBus.TopicAttribute"/>.
+            </summary>
+        </member>
         <member name="P:MessageBus.ExceptionFailure.CategoryName">
             <summary>
             The category which gets used for all exceptions.
@@ -204,6 +209,17 @@
             can unregister itself from the message bus in case it gets disposed.
             </summary>
         </member>
+        <member name="T:MessageBus.ITopicNameProvider">
+            <summary>
+            Returns the topic name for a given type.
+            </summary>
+        </member>
+        <member name="M:MessageBus.ITopicNameProvider.GetTopic(System.Type)">
+            <summary>
+            Returns the topic name for the given type.
+            </summary>
+            <exception cref="T:MessageBus.IncompleteConfigurationException">Is thrown if the topic name could not be found.</exception>
+        </member>
         <member name="T:MessageBus.MessageBrokerMessageBus">
             <summary>
             This part of the event bus is responsible for the <see cref="T:MessageBus.IMessageBusAwait"/>
@@ -331,6 +347,78 @@
             </summary>
             <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="value"/> is null.</exception>
             <exception cref="T:System.ArgumentException">Is thrown if <paramref name="value"/> is not a valid message id.</exception>
+        </member>
+        <member name="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.BeforeHandleMessage``1(MessageBus.Messaging.Hooking.HookedMessage{``0})">
+            <summary>
+            This hook gets executed before a message gets passed to a handler. The provided <paramref name="message"/>
+            contains the information available. The returned value gets passed to the handler.
+            </summary>
+            <remarks>The default behaviour would be to simply return the value of <see cref="P:MessageBus.Messaging.Hooking.HookedMessage`1.Message"/>.</remarks>
+        </member>
+        <member name="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.AfterHandleMessage``1(MessageBus.Messaging.Hooking.HookedMessage{``0},System.TimeSpan)">
+            <summary>
+            This hook gets executed after the handler was executed. The provided <paramref name="message"/> is the same
+            as the one which was provided in <see cref="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.BeforeHandleMessage``1(MessageBus.Messaging.Hooking.HookedMessage{``0})"/>.
+            </summary>
+        </member>
+        <member name="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.ExceptionDuringHandle``1(MessageBus.Messaging.Hooking.HookedMessage{``0},System.TimeSpan,System.Exception)">
+            <summary>
+            This hook gets executed when an unhandled exception occured within the handler. The provided <paramref name="message"/> is the same
+            as the one which was provided in <see cref="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.BeforeHandleMessage``1(MessageBus.Messaging.Hooking.HookedMessage{``0})"/>. The exception
+            will get rethrown automatically.
+            </summary>
+        </member>
+        <member name="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.BeforeHandleMessage(MessageBus.Messaging.Hooking.HookedMessage)">
+            <summary>
+            This hook gets executed before a message gets passed to a handler. The provided <paramref name="message"/>
+            contains the information available. The returned value gets passed to the handler.
+            </summary>
+            <remarks>The default behaviour would be to simply return the value of <see cref="P:MessageBus.Messaging.Hooking.HookedMessage.Message"/>.</remarks>
+        </member>
+        <member name="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.AfterHandleMessage(MessageBus.Messaging.Hooking.HookedMessage,System.TimeSpan)">
+            <summary>
+            This hook gets executed after the handler was executed. The provided <paramref name="message"/> is the same
+            as the one which was provided in <see cref="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.BeforeHandleMessage(MessageBus.Messaging.Hooking.HookedMessage)"/>.
+            </summary>
+        </member>
+        <member name="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.ExceptionDuringHandle(MessageBus.Messaging.Hooking.HookedMessage,System.TimeSpan,System.Exception)">
+            <summary>
+            This hook gets executed when an unhandled exception occured within the handler. The provided <paramref name="message"/> is the same
+            as the one which was provided in <see cref="M:MessageBus.Messaging.Hooking.IMessageBrokerHandleHook.BeforeHandleMessage(MessageBus.Messaging.Hooking.HookedMessage)"/>. The exception
+            will get rethrown automatically.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Messaging.Hooking.HookedMessage`1.Message">
+            <summary>
+            The message to process.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Messaging.Hooking.HookedMessage`1.Topic">
+            <summary>
+            The topic the <see cref="P:MessageBus.Messaging.Hooking.HookedMessage`1.Message"/> was sent in.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Messaging.Hooking.HookedMessage`1.MessageDescription">
+            <summary>
+            A human readable description for the <see cref="P:MessageBus.Messaging.Hooking.HookedMessage`1.Message"/>. This can be useful
+            for logging.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Messaging.Hooking.HookedMessage.Message">
+            <summary>
+            The message to process.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Messaging.Hooking.HookedMessage.Topic">
+            <summary>
+            The topic the <see cref="P:MessageBus.Messaging.Hooking.HookedMessage.Message"/> was sent in.
+            </summary>
+        </member>
+        <member name="P:MessageBus.Messaging.Hooking.HookedMessage.MessageDescription">
+            <summary>
+            A human readable description for the <see cref="P:MessageBus.Messaging.Hooking.HookedMessage.Message"/>. This can be useful
+            for logging.
+            </summary>
         </member>
         <member name="P:MessageBus.Messaging.IMessage.Payload">
             <summary>
@@ -537,6 +625,51 @@
             Creates a <see cref="T:MessageBus.Messaging.IMessageBroker"/> which can be used within a single process.
             </summary>
         </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.RegisterAllEventHandlers(MessageBus.IMessageBusHandler,System.Object)">
+            <summary>
+            Searches for all <see cref="T:MessageBus.IMessageEventHandler`1"/> or <see cref="T:MessageBus.IAsyncMessageEventHandler`1"/>
+            implementations within the instance of <paramref name="handler"/> and registers each implementation
+            to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+            returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IMessageEventHandler{``0})"/> or
+            <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IAsyncMessageEventHandler{``0})"/>.
+            </summary>
+            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            this method will get rolled back.</remarks>
+            <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="T:MessageBus.IMessageEventHandler`1"/>
+            or <see cref="T:MessageBus.IAsyncMessageEventHandler`1"/>.</exception>
+            <exception cref="T:System.Reflection.TargetInvocationException">Is thrown if the registration failed.</exception>
+        </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.RegisterAllCommandHandlers(MessageBus.IMessageBusHandler,System.Object)">
+            <summary>
+            Searches for all <see cref="T:MessageBus.IMessageCommandHandler`1"/> or <see cref="T:MessageBus.IAsyncMessageCommandHandler`1"/>
+            implementations within the instance of <paramref name="handler"/> and registers each implementation
+            to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+            returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterCommandHandler``1(MessageBus.IMessageCommandHandler{``0})"/> or
+            <see cref="M:MessageBus.IMessageBusHandler.RegisterCommandHandler``1(MessageBus.IAsyncMessageCommandHandler{``0})"/>.
+            </summary>
+            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            this method will get rolled back.</remarks>
+            <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="T:MessageBus.IMessageCommandHandler`1"/>
+            or <see cref="T:MessageBus.IAsyncMessageCommandHandler`1"/>.</exception>
+            <exception cref="T:System.Reflection.TargetInvocationException">Is thrown if the registration failed.</exception>
+        </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.AssignHandler(MessageBus.IMessageBusHandler,System.Object,System.Reflection.MethodInfo,System.Type)">
+            <summary>
+            Calls the event registration method of <paramref name="messageBus"/> within the instance provided by <paramref name="handler"/>.
+            The method to call is defined by <paramref name="invoke"/>. Because the registration methods have a generic type parameter,
+            the provided <paramref name="eventType"/> defines the actual type to pass.
+            </summary>
+        </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.CollectInterfaceGenericTypes(System.Object,System.Type)">
+            <summary>
+            Return the generic type of all interfaces of the given <paramref name="interfaceType"/> which
+            are implemented by the provided <paramref name="handler"/>.
+            </summary>
+        </member>
         <member name="M:MessageBus.NonBlockingMessageHandlerExtensions.WithParallelExecution``1(MessageBus.IAsyncMessageCommandHandler{``0})">
             <summary>
             Wraps the provided <paramref name="handler"/> with another handler which will execute the
@@ -576,6 +709,12 @@
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
             will implement that interface as well.</remarks>
+        </member>
+        <member name="T:MessageBus.TopicNameCache">
+            <summary>
+            Uses the provided unlying provider to read the topic names for a given
+            type. The result is cached. This class is thread safe.
+            </summary>
         </member>
     </members>
 </doc>
