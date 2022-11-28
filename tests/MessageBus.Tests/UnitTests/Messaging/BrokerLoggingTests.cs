@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MessageBus.Messaging;
 using MessageBus.Messaging.InProcess;
 using MessageBus.Messaging.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MessageBus.Tests.UnitTests.Logging
+namespace MessageBus.Messaging.Tests.UnitTests
 {
     [TestClass]
     public class BrokerLoggingTests
@@ -22,7 +21,7 @@ namespace MessageBus.Tests.UnitTests.Logging
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.Default())
                 .WrapWithLogging(collector);
 
-            await broker.PublishEvent<string>("Hello", "Topic");
+            await broker.PublishEvent("Hello", "Topic");
 
             var actualMessages = collector.ToArray();
             AssertMessages(new[] { "[Topic] type {System.String}: Publish event with payload: Hello" }, actualMessages);
@@ -35,7 +34,7 @@ namespace MessageBus.Tests.UnitTests.Logging
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.Default())
                 .WrapWithLogging(collector);
 
-            await broker.PublishCommand<string>("Hello", "Topic");
+            await broker.PublishCommand("Hello", "Topic");
 
             var actualMessages = collector.ToArray();
             AssertMessages(new[] { "[Topic] type {System.String}: Publish command with payload: Hello" }, actualMessages);
@@ -55,7 +54,7 @@ namespace MessageBus.Tests.UnitTests.Logging
                 m.Ack();
                 readyEvent.Set();
             });
-            await broker.PublishEvent<string>("Hello", "Topic");
+            await broker.PublishEvent("Hello", "Topic");
 
             Assert.IsTrue(readyEvent.Wait(TimeSpan.FromSeconds(2)));
             await Task.Delay(100);
