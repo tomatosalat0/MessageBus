@@ -291,6 +291,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
 
         public interface IWriteOnly
         {
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1044:Properties should not be write only", Justification = "Test Case")]
             string StringValue { set; }
         }
 
@@ -315,9 +316,9 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
         {
             public int SubType { get; init; }
 
-            public string StringValue { get; set; }
+            public string StringValue { get; set; } = null!;
 
-            public string Additional { get; init; }
+            public string Additional { get; init; } = null!;
         }
 
         public interface IWithGenericList

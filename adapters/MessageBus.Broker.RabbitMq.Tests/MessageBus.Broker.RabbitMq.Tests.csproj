@@ -15,10 +15,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MessageBus.Serialization.Json\MessageBus.Serialization.Json.csproj" />
+    <ProjectReference Include="..\..\src\MessageBus.Serialization\MessageBus.Serialization.csproj" />
     <ProjectReference Include="..\..\tests\MessageBus.AcceptanceTests\MessageBus.AcceptanceTests.csproj" />
     <ProjectReference Include="..\MessageBus.Broker.RabbitMq\MessageBus.Broker.RabbitMq.csproj" />
   </ItemGroup>
