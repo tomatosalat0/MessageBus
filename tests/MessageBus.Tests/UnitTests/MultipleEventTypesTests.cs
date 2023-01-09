@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MessageBus.Tests.UnitTests
 {
     [TestClass]
-    public class MultipleEventTypesTests
+    public class MultipleEventHandlerRegistrationTests
     {
         [TestMethod]
         public void RegisterAllThrowsExceptionOnNull()
@@ -182,9 +182,32 @@ namespace MessageBus.Tests.UnitTests
             Assert.AreEqual(42, resultB.ResultB);
         }
 
+        [TestMethod]
+        public async Task RegistrationSupportsEventHandlerConfiguration()
+        {
+            using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
+
+            MyMultiEventHandler handler = new MyMultiEventHandler();
+            bus.RegisterAllEventHandlers(handler, config =>
+            {
+                config.For<IMessageEventHandler<MyEventA>>(handler => handler.OnlyWhen(@event => @event.SomeValue == 42));
+            });
+
+            await bus.FireEvent(new MyEventA() { SomeValue = 0 });
+            await bus.FireEvent(new MyEventB());
+            await bus.FireEvent(new MyEventA() { SomeValue = 42 });
+            await bus.FireEvent(new MyEventB());
+            await Task.Delay(100);
+
+            Assert.AreEqual(1, handler.MyEvent_A_Calls);
+            Assert.AreEqual(2, handler.MyEvent_B_Calls);
+        }
+
         [Topic("Events/EventA")]
         public class MyEventA : IMessageEvent
         {
+            public int SomeValue { get; set; }
+
             public MessageId MessageId { get; } = MessageId.NewId();
         }
 

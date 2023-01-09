@@ -8,11 +8,13 @@ namespace MessageBus
     public static class MultipleHandlerImplementationExtension
     {
         /// <summary>
+        /// <para>
         /// Searches for all <see cref="IMessageEventHandler{TEvent}"/> or <see cref="IAsyncMessageEventHandler{TEvent}"/>
         /// implementations within the instance of <paramref name="handler"/> and registers each implementation
         /// to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
         /// returned by <see cref="IMessageBusHandler.RegisterEventHandler{TEvent}(IMessageEventHandler{TEvent})"/> or
         /// <see cref="IMessageBusHandler.RegisterEventHandler{TEvent}(IAsyncMessageEventHandler{TEvent})"/>.
+        /// </para>
         /// </summary>
         /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
         /// this method will get rolled back.</remarks>
@@ -25,6 +27,51 @@ namespace MessageBus
         {
             if (handler is null) throw new ArgumentNullException(nameof(handler));
 
+            return RegisterEventHandlers(messageBus, handler, setup: null);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Searches for all <see cref="IMessageEventHandler{TEvent}"/> or <see cref="IAsyncMessageEventHandler{TEvent}"/>
+        /// implementations within the instance of <paramref name="handler"/> and registers each implementation
+        /// to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+        /// returned by <see cref="IMessageBusHandler.RegisterEventHandler{TEvent}(IMessageEventHandler{TEvent})"/> or
+        /// <see cref="IMessageBusHandler.RegisterEventHandler{TEvent}(IAsyncMessageEventHandler{TEvent})"/>.
+        /// </para>
+        /// <para>
+        /// With the specified <paramref name="configuration"/>, each found handler can be configured/adjusted. See the example code for
+        /// details.
+        /// </para>
+        /// </summary>
+        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// this method will get rolled back.</remarks>
+        /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="IMessageEventHandler{TEvent}"/>
+        /// or <see cref="IAsyncMessageEventHandler{TEvent}"/>.</exception>
+        /// <exception cref="TargetInvocationException">Is thrown if the registration failed.</exception>
+        /* Example code
+
+        // Imaging having a "Handler" which implements IMessageEventHandler<MyEventA> and IMessageEventHandler<MyEventB>.
+        // If you want to configure the IMessageEventHandler<MyEventA> part, the code could look like this:
+
+        messageBus.RegisterAllEventHandlers(handler, config =>
+        {
+            config.For<IMessageEventHandler<MyEventA>>(h => h.OnlyWhen(@event => @event.SomeValue == 42));
+        }
+
+         */
+        public static IReadOnlyList<IDisposable> RegisterAllEventHandlers(this IMessageBusHandler messageBus, object handler, Action<HandlerConfigurator> configuration)
+        {
+            if (handler is null) throw new ArgumentNullException(nameof(handler));
+
+            HandlerConfigurator setup = new HandlerConfigurator();
+            configuration(setup);
+            return RegisterEventHandlers(messageBus, handler, setup);
+        }
+
+        private static IReadOnlyList<IDisposable> RegisterEventHandlers(IMessageBusHandler messageBus, object handler, HandlerConfigurator? setup)
+        {
             return RegisterAllHandlers(
                 messageBus,
                 handler,
@@ -34,7 +81,8 @@ namespace MessageBus
                 {
                     (typeof(IMessageEventHandler<>), 1),
                     (typeof(IAsyncMessageEventHandler<>), 1)
-                });
+                },
+                configuration: setup);
         }
 
         /// <summary>
@@ -64,7 +112,8 @@ namespace MessageBus
                 {
                     (typeof(IMessageCommandHandler<>), 1),
                     (typeof(IAsyncMessageCommandHandler<>), 1)
-                });
+                },
+                configuration: null);
         }
 
         /// <summary>
@@ -94,7 +143,8 @@ namespace MessageBus
                 {
                     (typeof(IMessageQueryHandler<,>), 2),
                     (typeof(IAsyncMessageQueryHandler<,>), 2)
-                });
+                },
+                configuration: null);
         }
 
         /// <summary>
@@ -124,7 +174,8 @@ namespace MessageBus
                 {
                     (typeof(IMessageRpcHandler<,>), 2),
                     (typeof(IAsyncMessageRpcHandler<,>), 2)
-                });
+                },
+                configuration: null);
         }
 
         private static IReadOnlyList<IDisposable> RegisterAllHandlers(
@@ -132,7 +183,8 @@ namespace MessageBus
             object handler,
             string registerMethodName,
             string explicitInterfaceMethodName,
-            IReadOnlyList<(Type HandlerType, int MessageTypeCount)> interfaceTypes)
+            IReadOnlyList<(Type HandlerType, int MessageTypeCount)> interfaceTypes,
+            HandlerConfigurator? configuration)
         {
             List<IDisposable> result = new List<IDisposable>();
             try
@@ -142,7 +194,7 @@ namespace MessageBus
                     MethodInfo registerEventHandler = GetRegistrationMethod(messageBus, registerMethodName, explicitInterfaceMethodName, pair.HandlerType);
                     result.AddRange(
                         CollectInterfaceGenericTypes(handler, pair.HandlerType, pair.MessageTypeCount)
-                            .Select(eventTypes => AssignHandler(messageBus, handler, registerEventHandler, eventTypes))
+                            .Select(pair => AssignHandler(messageBus, ApplyHandlerConfiguration(handler, pair.InterfaceType, configuration), registerEventHandler, pair.GenericArguments))
                     );
                 }
             }
@@ -159,6 +211,13 @@ namespace MessageBus
                 throw new InvalidOperationException($"No event handler implementation found in '{handler.GetType().FullName}'");
 
             return result;
+        }
+
+        private static object ApplyHandlerConfiguration(object handler, Type targetInterfaceType, HandlerConfigurator? configuration)
+        {
+            if (configuration is null)
+                return handler;
+            return configuration.Apply(targetInterfaceType, handler);
         }
 
         /// <summary>
@@ -178,15 +237,15 @@ namespace MessageBus
         /// Return the generic type of all interfaces of the given <paramref name="interfaceType"/> which
         /// are implemented by the provided <paramref name="handler"/>.
         /// </summary>
-        private static IEnumerable<Type[]> CollectInterfaceGenericTypes(object handler, Type interfaceType, int expectedGenericArgumentCount)
+        private static IEnumerable<(Type InterfaceType, Type[] GenericArguments)> CollectInterfaceGenericTypes(object handler, Type interfaceType, int expectedGenericArgumentCount)
         {
             return handler
                 .GetType()
                 .GetInterfaces()
                 .Where(p => p.IsGenericType)
                 .Where(p => p.GetGenericTypeDefinition() == interfaceType)
-                .Select(p => p.GetGenericArguments())
-                .Where(p => p.Length == expectedGenericArgumentCount);
+                .Select(p => (InterfaceType: p, GenericArguments: p.GetGenericArguments()))
+                .Where(p => p.GenericArguments.Length == expectedGenericArgumentCount);
         }
 
         private static MethodInfo GetRegistrationMethod(IMessageBusHandler messageBus, string methodName, string explicitMethodName, Type eventHandlerInterfaceType)

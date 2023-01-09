@@ -14,6 +14,14 @@
             The category which gets used for all exceptions.
             </summary>
         </member>
+        <member name="M:MessageBus.HandlerConfigurator.For``1(System.Func{``0,System.Object})">
+            <summary>
+            Specify the callback which should get used the input type is <typeparamref name="THandler"/>. Only if the
+            input type matches, the <paramref name="configure"/> action will get executed.
+            </summary>
+            <remarks>If an object matches more than one registered <typeparamref name="THandler"/>, only the first one
+            will get executed.</remarks>
+        </member>
         <member name="T:MessageBus.HandlerUnavailableException">
             <summary>
             Throw this exception within a command/query/rpc handler if you want to indicate that the handler
@@ -627,11 +635,35 @@
         </member>
         <member name="M:MessageBus.MultipleHandlerImplementationExtension.RegisterAllEventHandlers(MessageBus.IMessageBusHandler,System.Object)">
             <summary>
+            <para>
             Searches for all <see cref="T:MessageBus.IMessageEventHandler`1"/> or <see cref="T:MessageBus.IAsyncMessageEventHandler`1"/>
             implementations within the instance of <paramref name="handler"/> and registers each implementation
             to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
             returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IMessageEventHandler{``0})"/> or
             <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IAsyncMessageEventHandler{``0})"/>.
+            </para>
+            </summary>
+            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            this method will get rolled back.</remarks>
+            <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Is thrown if <paramref name="handler"/> does not implement any <see cref="T:MessageBus.IMessageEventHandler`1"/>
+            or <see cref="T:MessageBus.IAsyncMessageEventHandler`1"/>.</exception>
+            <exception cref="T:System.Reflection.TargetInvocationException">Is thrown if the registration failed.</exception>
+        </member>
+        <member name="M:MessageBus.MultipleHandlerImplementationExtension.RegisterAllEventHandlers(MessageBus.IMessageBusHandler,System.Object,System.Action{MessageBus.HandlerConfigurator})">
+            <summary>
+            <para>
+            Searches for all <see cref="T:MessageBus.IMessageEventHandler`1"/> or <see cref="T:MessageBus.IAsyncMessageEventHandler`1"/>
+            implementations within the instance of <paramref name="handler"/> and registers each implementation
+            to the provided <paramref name="messageBus"/>. The method returns a list of all subscription disposables
+            returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IMessageEventHandler{``0})"/> or
+            <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IAsyncMessageEventHandler{``0})"/>.
+            </para>
+            <para>
+            With the specified <paramref name="configuration"/>, each found handler can be configured/adjusted. See the example code for
+            details.
+            </para>
             </summary>
             <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
             this method will get rolled back.</remarks>
