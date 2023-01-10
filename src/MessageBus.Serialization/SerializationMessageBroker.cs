@@ -19,12 +19,12 @@ namespace MessageBus.Serialization
 
         public ISubscribable Commands(TopicName topic, ISubscriptionOptions? options)
         {
-            return new SerializeableSubscribable(_inner.Commands(topic, options), _serializer);
+            return new SerializableSubscribable(_inner.Commands(topic, options), _serializer);
         }
 
         public ISubscribable Events(TopicName topic, EventsOptions options)
         {
-            return new SerializeableSubscribable(_inner.Events(topic, options), _serializer);
+            return new SerializableSubscribable(_inner.Events(topic, options), _serializer);
         }
 
         public Task PublishEvent<T>(T message, IReadOnlyList<TopicName> topics)

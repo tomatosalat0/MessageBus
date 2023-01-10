@@ -12,7 +12,7 @@ namespace MessageBus.Serialization.Json.DynamicTypes
 
         private readonly ConstructorInfo _jsonIncludeAttributeConstructor = typeof(JsonIncludeAttribute).GetConstructor(Array.Empty<Type>())!;
         private readonly ConstructorInfo _jsonIgnoreAttributeConstructor = typeof(JsonIgnoreAttribute).GetConstructor(Array.Empty<Type>())!;
-        private readonly ConstructorInfo _argumentNullExceptionContructor = typeof(ArgumentNullException).GetConstructor(new Type[] { typeof(string) })!;
+        private readonly ConstructorInfo _argumentNullExceptionConstructor = typeof(ArgumentNullException).GetConstructor(new Type[] { typeof(string) })!;
         private readonly ConstructorInfo _invalidOperationExceptionConstructor = typeof(InvalidOperationException).GetConstructor(new Type[] { typeof(string) })!;
         private readonly NullabilityInfoContext _nullabilityContext = new NullabilityInfoContext();
         private readonly ModuleBuilder _dynamicTypesModule;
@@ -178,7 +178,7 @@ namespace MessageBus.Serialization.Json.DynamicTypes
             generator.Emit(OpCodes.Brtrue_S, isValueNull);
             generator.Emit(OpCodes.Pop);
             generator.Emit(OpCodes.Ldstr, property.Name);
-            generator.Emit(OpCodes.Newobj, _argumentNullExceptionContructor);
+            generator.Emit(OpCodes.Newobj, _argumentNullExceptionConstructor);
             generator.Emit(OpCodes.Throw);
 
             generator.MarkLabel(isValueNull);

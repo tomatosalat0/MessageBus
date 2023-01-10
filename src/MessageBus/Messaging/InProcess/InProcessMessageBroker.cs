@@ -17,7 +17,7 @@ namespace MessageBus.Messaging.InProcess
         private readonly BlockingCollection<Action> _pendingActions = new BlockingCollection<Action>();
         private readonly IScheduler _actionCollector;
         private readonly IScheduler _actionRunner;
-        private readonly IEventExecuter _executer;
+        private readonly IEventExecutor _executor;
         private readonly ChannelCleanupTime _channelCleanupTimer;
         private bool _disposedValue;
 
@@ -25,7 +25,7 @@ namespace MessageBus.Messaging.InProcess
         {
             if (options is null) throw new ArgumentNullException(nameof(options));
 
-            _executer = options.EventExecuter;
+            _executor = options.EventExecutor;
             _channelCleanupTimer = new ChannelCleanupTime(interval: TimeSpan.FromSeconds(10));
 
             _actionCollector = options.CollectScheduler.Create(new ActionCollector(this));
@@ -186,7 +186,7 @@ namespace MessageBus.Messaging.InProcess
 
         private Action WrapForExecution(Action action)
         {
-            return _executer.Wrap(action);
+            return _executor.Wrap(action);
         }
 
         private void ThrowDisposed()

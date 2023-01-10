@@ -29,7 +29,7 @@ namespace MessageBus.Messaging.InProcess
         {
             return new MessageBrokerOptions(scheduler, scheduler)
             {
-                EventExecuter = new BlockingEventExecuter()
+                EventExecutor = new BlockingEventExecuter()
             };
         }
 
@@ -37,6 +37,6 @@ namespace MessageBus.Messaging.InProcess
 
         public ISchedulerFactory ExecuteScheduler { get; }
 
-        public IEventExecuter EventExecuter { get; init; } = new TaskedEventExecution();
+        public IEventExecutor EventExecutor { get; init; } = new TaskedEventExecution();
     }
 }

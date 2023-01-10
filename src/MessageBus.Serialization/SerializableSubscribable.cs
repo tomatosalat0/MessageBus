@@ -3,12 +3,12 @@ using MessageBus.Messaging;
 
 namespace MessageBus.Serialization
 {
-    internal readonly struct SerializeableSubscribable : ISubscribable
+    internal readonly struct SerializableSubscribable : ISubscribable
     {
         private readonly IMessageSerializer _serializer;
         private readonly ISubscribable _inner;
 
-        public SerializeableSubscribable(ISubscribable inner, IMessageSerializer serializer)
+        public SerializableSubscribable(ISubscribable inner, IMessageSerializer serializer)
         {
             _inner = inner;
             _serializer = serializer;

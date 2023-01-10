@@ -237,13 +237,13 @@ namespace MessageBus
             );
         }
 
-        private Task HandleMessageAndPublishOutcome<TIncomming, TSuccess, TFailure>(
+        private Task HandleMessageAndPublishOutcome<TIncoming, TSuccess, TFailure>(
             TopicName successTopic,
             TopicName failureTopic,
-            IMessage<TIncomming> message,
-            Func<TIncomming, TSuccess> run,
-            Func<IMessage<TIncomming>, Exception, TFailure> onException)
-            where TIncomming : IHasMessageId
+            IMessage<TIncoming> message,
+            Func<TIncoming, TSuccess> run,
+            Func<IMessage<TIncoming>, Exception, TFailure> onException)
+            where TIncoming : IHasMessageId
         {
             try
             {

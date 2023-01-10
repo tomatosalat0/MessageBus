@@ -2,7 +2,7 @@
 
 namespace MessageBus.Messaging.InProcess
 {
-    public interface IEventExecuter
+    public interface IEventExecutor
     {
         /// <summary>
         /// Wraps the provided <paramref name="action"/>. The returned action

@@ -534,7 +534,7 @@
             </summary>
             <remarks>Do not use this class in production - it can result in a dead lock.</remarks>
         </member>
-        <member name="M:MessageBus.Messaging.InProcess.IEventExecuter.Wrap(System.Action)">
+        <member name="M:MessageBus.Messaging.InProcess.IEventExecutor.Wrap(System.Action)">
             <summary>
             Wraps the provided <paramref name="action"/>. The returned action
             will get called to perform the <paramref name="action"/>.

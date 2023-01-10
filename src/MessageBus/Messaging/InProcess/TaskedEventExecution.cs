@@ -6,7 +6,7 @@ namespace MessageBus.Messaging.InProcess
     /// <summary>
     /// Executes all given actions within its own <see cref="Task"/>.
     /// </summary>
-    public sealed class TaskedEventExecution : IEventExecuter
+    public sealed class TaskedEventExecution : IEventExecutor
     {
         public Action Wrap(Action action)
         {
