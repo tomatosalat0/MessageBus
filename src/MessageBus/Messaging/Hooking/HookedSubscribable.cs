@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace MessageBus.Messaging.Hooking
 {
-    internal readonly struct HookedSubscribable : ISubscribable
+    internal sealed class HookedSubscribable : ISubscribable
     {
         private readonly IMessageBrokerHandleHook _hook;
         private readonly ISubscribable _inner;

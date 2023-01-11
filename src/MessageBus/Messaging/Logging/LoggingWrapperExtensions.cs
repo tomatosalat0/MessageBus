@@ -61,7 +61,7 @@ namespace MessageBus.Messaging
             }
         }
 
-        private readonly struct LogSubscribe : ISubscribable
+        private sealed class LogSubscribe : ISubscribable
         {
             private readonly TopicName _topic;
             private readonly IBrokerLogger _logger;
@@ -87,7 +87,7 @@ namespace MessageBus.Messaging
             }
         }
 
-        private class LoggingHook : IMessageBrokerHandleHook
+        private sealed class LoggingHook : IMessageBrokerHandleHook
         {
             private readonly IBrokerLogger _logger;
 
@@ -129,7 +129,7 @@ namespace MessageBus.Messaging
             }
         }
 
-        private readonly struct LoggingAnonymousMessage : IMessage
+        private sealed class LoggingAnonymousMessage : IMessage
         {
             private readonly IMessage _source;
             private readonly IBrokerLogger _logger;
@@ -159,7 +159,7 @@ namespace MessageBus.Messaging
             }
         }
 
-        private readonly struct LoggingMessage<T> : IMessage<T>, IMessageSupportsRejection
+        private sealed class LoggingMessage<T> : IMessage<T>, IMessageSupportsRejection
         {
             private readonly IMessage<T> _source;
             private readonly IBrokerLogger _logger;

@@ -34,7 +34,7 @@ namespace MessageBus.Messaging.InProcess.Execution
             return false;
         }
 
-        private readonly struct Work : IWorkFactory.IWork
+        private sealed class Work : IWorkFactory.IWork
         {
             private readonly ICollectable _source;
 

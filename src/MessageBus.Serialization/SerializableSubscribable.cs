@@ -3,7 +3,7 @@ using MessageBus.Messaging;
 
 namespace MessageBus.Serialization
 {
-    internal readonly struct SerializableSubscribable : ISubscribable
+    internal sealed  class SerializableSubscribable : ISubscribable
     {
         private readonly IMessageSerializer _serializer;
         private readonly ISubscribable _inner;
@@ -34,7 +34,7 @@ namespace MessageBus.Serialization
             });
         }
 
-        private readonly struct DeserializedAnonymousMessage : IMessage
+        private sealed class DeserializedAnonymousMessage : IMessage
         {
             private readonly IMessage<byte[]> _source;
 
@@ -59,7 +59,7 @@ namespace MessageBus.Serialization
             }
         }
 
-        private readonly struct DeserializedMessage<T> : IMessage<T>, IMessageSupportsRejection
+        private sealed class DeserializedMessage<T> : IMessage<T>, IMessageSupportsRejection
         {
             private readonly IMessage<byte[]> _source;
 
