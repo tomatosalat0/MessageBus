@@ -59,12 +59,12 @@ namespace MessageBus
         private sealed class RetryAsyncCommandHandler<TCommand> : DecoratedAsyncCommandHandler<TCommand>
             where TCommand : IMessageCommand
         {
-            private readonly Func<Exception, bool> _shoudRetry;
+            private readonly Func<Exception, bool> _shouldRetry;
 
             public RetryAsyncCommandHandler(IAsyncMessageCommandHandler<TCommand> inner, Func<Exception, bool> shouldRetry)
                 : base(inner)
             {
-                _shoudRetry = shouldRetry;
+                _shouldRetry = shouldRetry;
             }
 
             public override async Task HandleAsync(TCommand command)
@@ -75,7 +75,7 @@ namespace MessageBus
                 }
                 catch (Exception ex)
                 {
-                    if (ex is HandlerUnavailableException || !_shoudRetry(ex))
+                    if (ex is HandlerUnavailableException || !_shouldRetry(ex))
                         throw;
 
                     throw new HandlerUnavailableException(ex.Message, ex);
@@ -86,12 +86,12 @@ namespace MessageBus
         private sealed class RetryCommandHandler<TCommand> : DecoratedCommandHandler<TCommand>
             where TCommand : IMessageCommand
         {
-            private readonly Func<Exception, bool> _shoudRetry;
+            private readonly Func<Exception, bool> _shouldRetry;
 
             public RetryCommandHandler(IMessageCommandHandler<TCommand> inner, Func<Exception, bool> shouldRetry)
                 : base(inner)
             {
-                _shoudRetry = shouldRetry;
+                _shouldRetry = shouldRetry;
             }
 
             public override void Handle(TCommand command)
@@ -102,7 +102,7 @@ namespace MessageBus
                 }
                 catch (Exception ex)
                 {
-                    if (ex is HandlerUnavailableException || !_shoudRetry(ex))
+                    if (ex is HandlerUnavailableException || !_shouldRetry(ex))
                         throw;
 
                     throw new HandlerUnavailableException(ex.Message, ex);

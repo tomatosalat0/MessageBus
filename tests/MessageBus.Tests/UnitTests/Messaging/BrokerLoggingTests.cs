@@ -15,7 +15,7 @@ namespace MessageBus.Messaging.Tests.UnitTests
     public class BrokerLoggingTests
     {
         [TestMethod]
-        public async Task LoggerCapturesEventFireing()
+        public async Task LoggerCapturesEventFiring()
         {
             LogCollector collector = new LogCollector();
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.Default())
@@ -28,7 +28,7 @@ namespace MessageBus.Messaging.Tests.UnitTests
         }
 
         [TestMethod]
-        public async Task LoggerCapturesCommandFireing()
+        public async Task LoggerCapturesCommandFiring()
         {
             LogCollector collector = new LogCollector();
             using IMessageBroker broker = new InProcessMessageBroker(MessageBrokerOptions.Default())

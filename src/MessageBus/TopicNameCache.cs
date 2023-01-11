@@ -5,7 +5,7 @@ using MessageBus.Messaging;
 namespace MessageBus
 {
     /// <summary>
-    /// Uses the provided unlying provider to read the topic names for a given
+    /// Uses the provided underlying provider to read the topic names for a given
     /// type. The result is cached. This class is thread safe.
     /// </summary>
     public sealed class TopicNameCache : ITopicNameProvider

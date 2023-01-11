@@ -11,7 +11,7 @@ namespace MessageBus.Examples.MessageBus
         public static async Task Execute(Application system)
         {
             Console.WriteLine("This example shows that the tasked based event system prevents dead looks from happening.");
-            Console.WriteLine("If the event execution is replaced with the BlockingEventExecuter (in MessageBrokerOptions.EventExecuter),");
+            Console.WriteLine("If the event execution is replaced with the BlockingEventExecutor (in MessageBrokerOptions.EventExecutor),");
             Console.WriteLine("this example will timeout. Because the queued EnsureSampleServiceWorkingCommand will not stop waiting for a result,");
             Console.WriteLine("The hole system becomes unresponsive so the command at the end will never return because the system will still");
             Console.WriteLine("wait for EnsureSampleServiceWorkingCommand to complete");

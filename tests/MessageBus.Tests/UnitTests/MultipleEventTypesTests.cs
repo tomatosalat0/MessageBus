@@ -27,7 +27,7 @@ namespace MessageBus.Tests.UnitTests
         }
 
         [TestMethod]
-        public void RegisterSucceedsIfMessageBusIsExplicitelyImplemented()
+        public void RegisterSucceedsIfMessageBusIsExplicitlyImplemented()
         {
             IMessageBusHandler bus = new ExplicitMessageHandlerImplementation();
 
@@ -36,7 +36,7 @@ namespace MessageBus.Tests.UnitTests
         }
 
         [TestMethod]
-        public void RegisterSucceedsIfMessageBusIsImplicitelyImplemented()
+        public void RegisterSucceedsIfMessageBusIsImplicitlyImplemented()
         {
             IMessageBusHandler bus = new ImplicitMessageHandlerImplementation();
 
@@ -45,7 +45,7 @@ namespace MessageBus.Tests.UnitTests
         }
 
         [TestMethod]
-        public void RegisterThrowsTargetInvokationExceptionIfMessageBusFails()
+        public void RegisterThrowsTargetInvocationExceptionIfMessageBusFails()
         {
             IMessageBusHandler bus = new AlwaysFailMessageHandler();
 
@@ -149,7 +149,7 @@ namespace MessageBus.Tests.UnitTests
         }
 
         [TestMethod]
-        public async Task RegisterationExceptionWillOnlyRollbackWhatHappenedWithinThisMethod()
+        public async Task RegistrationExceptionWillOnlyRollbackWhatHappenedWithinThisMethod()
         {
             using IMessageBus bus = new MessageBrokerMessageBus(MemoryMessageBrokerBuilder.InProcessBroker(), NoExceptionNotification.Instance);
 
@@ -223,7 +223,7 @@ namespace MessageBus.Tests.UnitTests
             public MessageId MessageId { get; } = MessageId.NewId();
         }
 
-        // the missing topic attribute is intential
+        // the missing topic attribute is intentional
         public class MyIncompleteConfiguredEvent : IMessageEvent
         {
             public MessageId MessageId { get; } = MessageId.NewId();

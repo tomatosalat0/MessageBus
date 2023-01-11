@@ -19,7 +19,7 @@ namespace MessageBus.Examples.MessageBus
 
             await eventSystem.FireCommand(new LogMessageCommand("Please log this message"));
 
-            // the LogMessageCreated handler will be called asynchroniously after the command completed.
+            // the LogMessageCreated handler will be called asynchronously after the command completed.
             // So just wait until its done.
             await Task.Delay(100);
         }

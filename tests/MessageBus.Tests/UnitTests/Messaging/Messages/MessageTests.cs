@@ -8,7 +8,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Messages
     public class MessageTests
     {
         [TestMethod]
-        public void NewMessageIsNotAcknowldegedOrUnAcknowledged()
+        public void NewMessageIsNotAcknowledgedOrUnAcknowledged()
         {
             Message message = new Message(payload: null);
             Assert.AreEqual(MessageState.Initial, message.State);
@@ -33,7 +33,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Messages
         }
 
         [TestMethod]
-        public void NotAcknowldgeSetsNotAcknowledgedFlag()
+        public void NotAcknowledgeSetsNotAcknowledgedFlag()
         {
             Message message = new Message(payload: null);
             message.Nack();
@@ -51,7 +51,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Messages
         }
 
         [TestMethod]
-        public void AcknowlegeThrowsExceptionOfNotAcknowledgedMessage()
+        public void AcknowledgeThrowsExceptionOfNotAcknowledgedMessage()
         {
             Message message = new Message(payload: null);
             message.Nack();
@@ -59,7 +59,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Messages
         }
 
         [TestMethod]
-        public void NotAcknowlegeThrowsExceptionIfAcknowldgedMessage()
+        public void NotAcknowledgeThrowsExceptionIfAcknowledgedMessage()
         {
             Message message = new Message(payload: null);
             message.Ack();

@@ -6,7 +6,7 @@ namespace MessageBus.Decorations.Versioning
         where TIndicatorType : IComparable<TIndicatorType>
     {
         /// <summary>
-        /// Gets the version from an incomming message. Returns true if
+        /// Gets the version from an incoming message. Returns true if
         /// the provided <paramref name="versionId"/> is newer then the
         /// latest known version, otherwise false.
         /// </summary>

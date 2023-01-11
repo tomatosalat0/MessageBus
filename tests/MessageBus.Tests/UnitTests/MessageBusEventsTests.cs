@@ -96,7 +96,7 @@ namespace MessageBus.Tests.UnitTests
             int numberOfCalls = 0;
             bus.RegisterEventDelegate<TestEventA>(
                 m => numberOfCalls++, 
-                (hander) => hander.WithDuplicateMessageDetection(duplicationHandler)
+                (handler) => handler.WithDuplicateMessageDetection(duplicationHandler)
             );
             TestEventA @event = new TestEventA();
 

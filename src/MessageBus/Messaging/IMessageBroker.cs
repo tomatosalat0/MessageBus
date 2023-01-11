@@ -12,7 +12,7 @@ namespace MessageBus.Messaging
         /// If the channel didn't exist before, it will automatically get created.
         /// Event channels will not try to resend message if they weren't acknowledged.
         /// If multiple events are pending for a single event listener, each event
-        /// will get forwarded to the listener separately. The handler won't get called simulatinously for
+        /// will get forwarded to the listener separately. The handler won't get called simultaneously for
         /// multiple events. The execution order of messages is not guaranteed to be the
         /// same as the order the messages got published. The <paramref name="options"/> define the
         /// desired behavior of the events channel. If a channel is not created within this call,
@@ -73,7 +73,7 @@ namespace MessageBus.Messaging
         /// If the channel didn't exist before, it will automatically get created.
         /// Event channels will not try to resend message if they weren't acknowledged.
         /// If multiple events are pending for a single event listener, each event
-        /// will get forwarded to the listener separately. The handler won't get called simulatinously for
+        /// will get forwarded to the listener separately. The handler won't get called simultaneously for
         /// multiple events. The execution order of messages is not guaranteed to be the
         /// same as the order the messages got published.
         /// </summary>

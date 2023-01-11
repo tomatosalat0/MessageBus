@@ -10,7 +10,7 @@ namespace MessageBus
         /// <summary>
         /// Wraps the provided <paramref name="handler"/> with another handler which will execute the
         /// <see cref="IAsyncMessageCommandHandler{TEvent}.HandleAsync(TEvent)"/> within its own task. This
-        /// means that multiple threads will execute the wrapped handler simultaniously. Only use this
+        /// means that multiple threads will execute the wrapped handler simultaneously. Only use this
         /// method if you are sure that the wrapped handler is thread safe and stateless.
         /// </summary>
         /// <remarks>If the provided <paramref name="handler"/> implements <see cref="ISubscriptionAwareHandler"/>, the result
@@ -24,7 +24,7 @@ namespace MessageBus
         /// <summary>
         /// Wraps the provided <paramref name="handler"/> with another handler which will execute the
         /// <see cref="IMessageCommandHandler{TEvent}.Handle(TEvent)"/> within its own task. This
-        /// means that multiple threads will execute the wrapped handler simultaniously. Only use this
+        /// means that multiple threads will execute the wrapped handler simultaneously. Only use this
         /// method if you are sure that the wrapped handler is thread safe and stateless.
         /// </summary>
         /// <remarks>If the provided <paramref name="handler"/> implements <see cref="ISubscriptionAwareHandler"/>, the result
@@ -38,7 +38,7 @@ namespace MessageBus
         /// <summary>
         /// Wraps the provided <paramref name="handler"/> with another handler which will execute the
         /// <see cref="IAsyncMessageEventHandler{TEvent}.HandleAsync(TEvent)"/> within its own task. This
-        /// means that multiple threads will execute the wrapped handler simultaniously. Only use this
+        /// means that multiple threads will execute the wrapped handler simultaneously. Only use this
         /// method if you are sure that the wrapped handler is thread safe and stateless.
         /// </summary>
         /// <remarks>If the provided <paramref name="handler"/> implements <see cref="ISubscriptionAwareHandler"/>, the result
@@ -52,7 +52,7 @@ namespace MessageBus
         /// <summary>
         /// Wraps the provided <paramref name="handler"/> with another handler which will execute the
         /// <see cref="IMessageEventHandler{TEvent}.Handle(TEvent)"/> within its own task. This
-        /// means that multiple threads will execute the wrapped handler simultaniously. Only use this
+        /// means that multiple threads will execute the wrapped handler simultaneously. Only use this
         /// method if you are sure that the wrapped handler is thread safe and stateless.
         /// </summary>
         /// <remarks>If the provided <paramref name="handler"/> implements <see cref="ISubscriptionAwareHandler"/>, the result

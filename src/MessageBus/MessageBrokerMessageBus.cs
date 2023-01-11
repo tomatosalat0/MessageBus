@@ -7,7 +7,7 @@ using MessageBus.Messaging;
 namespace MessageBus
 {
     /// <summary>
-    /// A simple event bus which uses <see cref="IMessageBroker"/> as the event transport mechansim.
+    /// A simple event bus which uses <see cref="IMessageBroker"/> as the event transport mechanism.
     /// </summary>
     public sealed partial class MessageBrokerMessageBus : IMessageBus, IDisposable
     {

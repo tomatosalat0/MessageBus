@@ -85,7 +85,7 @@ namespace MessageBus.Messaging.Tests.UnitTests
         }
 
         [TestMethod]
-        public void TopicNameDoesNotAllowAnywhitespace()
+        public void TopicNameDoesNotAllowAnyWhitespace()
         {
             Assert.ThrowsException<ValidationException>(() => new TopicName("Test abc"));
         }

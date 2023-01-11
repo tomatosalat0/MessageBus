@@ -13,7 +13,7 @@ namespace MessageBus.Examples.SharedMessageInterface.ModuleA
 
         public interface ICallable
         {
-            Task PerfomSomeWork();
+            Task PerformSomeWork();
         }
 
         private class ModuleA : ICallable
@@ -30,12 +30,12 @@ namespace MessageBus.Examples.SharedMessageInterface.ModuleA
                 return new ModuleA(messageBus);
             }
 
-            public async Task PerfomSomeWork()
+            public async Task PerformSomeWork()
             {
                 Console.WriteLine($"[{nameof(ModuleA)}] Fetching current time");
                 DateTime valueToBroadcast = (await _messageBus.FireQuery<IGetCurrentDateTimeQuery, IGetCurrentDateTimeQuery.IResult>(new Query(universalTime: false), TimeSpan.FromSeconds(1))).Value;
 
-                // note that the type is defined explicitely to IMyEvent. Thats because
+                // note that the type is defined explicitly to IMyEvent. That's because
                 // the actual topic is defined within the interface and not in the concrete
                 // implementation "ModuleAEvent"
                 Console.WriteLine($"[{nameof(ModuleA)}] Received the current date, broadcasting event");

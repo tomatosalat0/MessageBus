@@ -38,7 +38,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Channels
         }
 
         [TestMethod]
-        public async Task UnubscribedChannelWontCreateWorkAfterPublish()
+        public async Task UnsubscribedChannelWontCreateWorkAfterPublish()
         {
             CommandsChannel channel = new CommandsChannel(() => { });
             await channel.Publish(new object());
@@ -105,7 +105,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Channels
         }
 
         [TestMethod]
-        public async Task UndisposedSubscriptionWillReceiveEvents()
+        public async Task UnDisposedSubscriptionWillReceiveEvents()
         {
             int callCountA = 0;
             int callCountB = 0;

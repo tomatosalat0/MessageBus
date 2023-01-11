@@ -25,14 +25,14 @@
         <member name="T:MessageBus.HandlerUnavailableException">
             <summary>
             Throw this exception within a command/query/rpc handler if you want to indicate that the handler
-            itself is currently not able to process the incomming message.
+            itself is currently not able to process the incoming message.
             If this exception gets thrown, the message will get rescheduled.
             </summary>
         </member>
         <member name="M:MessageBus.IExceptionNotification.NotifyException(MessageBus.MessageId,System.Object,System.Exception)">
             <summary>
             Gets called when an exception occured within any handler. The parameter <paramref name="messageId"/>
-            is the correlation id of the message which got procssed. <paramref name="message"/> is the
+            is the correlation id of the message which got processed. <paramref name="message"/> is the
             actual message which got processed. Normally this can be something implementing <see cref="T:MessageBus.IMessageQuery`1"/>,
             <see cref="T:MessageBus.IMessageEvent"/> or <see cref="T:MessageBus.IMessageCommand"/>. <paramref name="exception"/> is the exception
             which didn't get caught within the handler itself.
@@ -201,7 +201,7 @@
             provided <paramref name="rpcParameter"/> is available, this method will never return.
             </summary>
             <remarks>While a RPC might look identical to a query, it is semantically different. A query should not change any
-            state while an RPC doesn't have this constraint. However, if you want to go with asynchronious communication,
+            state while an RPC doesn't have this constraint. However, if you want to go with asynchronous communication,
             you should avoid RPC calls and replace them with Commands.</remarks>
             <exception cref="T:System.OperationCanceledException">Is thrown if the provided <paramref name="cancellationToken"/>
             is cancelled.</exception>
@@ -234,7 +234,7 @@
             implementation.
             </summary>
             <summary>
-            A simple event bus which uses <see cref="T:MessageBus.Messaging.IMessageBroker"/> as the event transport mechansim.
+            A simple event bus which uses <see cref="T:MessageBus.Messaging.IMessageBroker"/> as the event transport mechanism.
             </summary>
             <summary>
             This part of the event bus is responsible for the <see cref="T:MessageBus.IMessageBusHandler"/>
@@ -444,7 +444,7 @@
             If the channel didn't exist before, it will automatically get created.
             Event channels will not try to resend message if they weren't acknowledged.
             If multiple events are pending for a single event listener, each event
-            will get forwarded to the listener separately. The handler won't get called simulatinously for
+            will get forwarded to the listener separately. The handler won't get called simultaneously for
             multiple events. The execution order of messages is not guaranteed to be the
             same as the order the messages got published. The <paramref name="options"/> define the
             desired behavior of the events channel. If a channel is not created within this call,
@@ -498,7 +498,7 @@
             If the channel didn't exist before, it will automatically get created.
             Event channels will not try to resend message if they weren't acknowledged.
             If multiple events are pending for a single event listener, each event
-            will get forwarded to the listener separately. The handler won't get called simulatinously for
+            will get forwarded to the listener separately. The handler won't get called simultaneously for
             multiple events. The execution order of messages is not guaranteed to be the
             same as the order the messages got published.
             </summary>
@@ -528,7 +528,7 @@
             but should get sent again.
             </summary>
         </member>
-        <member name="T:MessageBus.Messaging.InProcess.BlockingEventExecuter">
+        <member name="T:MessageBus.Messaging.InProcess.BlockingEventExecutor">
             <summary>
             Executes all provided actions within the caller thread.
             </summary>
@@ -589,7 +589,7 @@
             Add a new subscription to the current channel. The passed <paramref name="messageHandler"/> will get called
             for each event which got published to the current channel. Note: depending on the used broker scheduler, the
             <paramref name="messageHandler"/> callback will get called from multiple threads and might even get called
-            simultaniously for different events. The <typeparamref name="T"/> should match the type of the message which
+            simultaneously for different events. The <typeparamref name="T"/> should match the type of the message which
             gets send with <see cref="M:MessageBus.Messaging.IPublishable.Publish``1(``0)"/>.
             </summary>
         </member>
@@ -598,7 +598,7 @@
             Add a new subscription to the current channel. The passed <paramref name="messageHandler"/> will get called
             for each event which got published to the current channel. Note: depending on the used broker scheduler, the
             <paramref name="messageHandler"/> callback will get called from multiple threads and might even get called
-            simultaniously for different events.
+            simultaneously for different events.
             </summary>
         </member>
         <member name="P:MessageBus.Messaging.ISubscriptionOptions.Attributes">
@@ -643,7 +643,7 @@
             <see cref="M:MessageBus.IMessageBusHandler.RegisterEventHandler``1(MessageBus.IAsyncMessageEventHandler{``0})"/>.
             </para>
             </summary>
-            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
             this method will get rolled back.</remarks>
             <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
             <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -665,7 +665,7 @@
             details.
             </para>
             </summary>
-            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
             this method will get rolled back.</remarks>
             <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
             <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -681,7 +681,7 @@
             returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterCommandHandler``1(MessageBus.IMessageCommandHandler{``0})"/> or
             <see cref="M:MessageBus.IMessageBusHandler.RegisterCommandHandler``1(MessageBus.IAsyncMessageCommandHandler{``0})"/>.
             </summary>
-            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
             this method will get rolled back.</remarks>
             <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
             <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -697,7 +697,7 @@
             returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterQueryHandler``2(MessageBus.IMessageQueryHandler{``0,``1})"/> or
             <see cref="M:MessageBus.IMessageBusHandler.RegisterQueryHandler``2(MessageBus.IAsyncMessageQueryHandler{``0,``1})"/>.
             </summary>
-            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
             this method will get rolled back.</remarks>
             <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
             <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -713,7 +713,7 @@
             returned by <see cref="M:MessageBus.IMessageBusHandler.RegisterRpcHandler``2(MessageBus.IMessageRpcHandler{``0,``1})"/> or
             <see cref="M:MessageBus.IMessageBusHandler.RegisterRpcHandler``2(MessageBus.IAsyncMessageRpcHandler{``0,``1})"/>.
             </summary>
-            <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+            <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
             this method will get rolled back.</remarks>
             <exception cref="T:System.ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
             <exception cref="T:System.ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -738,7 +738,7 @@
             <summary>
             Wraps the provided <paramref name="handler"/> with another handler which will execute the
             <see cref="M:MessageBus.IAsyncMessageCommandHandler`1.HandleAsync(`0)"/> within its own task. This
-            means that multiple threads will execute the wrapped handler simultaniously. Only use this
+            means that multiple threads will execute the wrapped handler simultaneously. Only use this
             method if you are sure that the wrapped handler is thread safe and stateless.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -748,7 +748,7 @@
             <summary>
             Wraps the provided <paramref name="handler"/> with another handler which will execute the
             <see cref="M:MessageBus.IMessageCommandHandler`1.Handle(`0)"/> within its own task. This
-            means that multiple threads will execute the wrapped handler simultaniously. Only use this
+            means that multiple threads will execute the wrapped handler simultaneously. Only use this
             method if you are sure that the wrapped handler is thread safe and stateless.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -758,7 +758,7 @@
             <summary>
             Wraps the provided <paramref name="handler"/> with another handler which will execute the
             <see cref="M:MessageBus.IAsyncMessageEventHandler`1.HandleAsync(`0)"/> within its own task. This
-            means that multiple threads will execute the wrapped handler simultaniously. Only use this
+            means that multiple threads will execute the wrapped handler simultaneously. Only use this
             method if you are sure that the wrapped handler is thread safe and stateless.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -768,7 +768,7 @@
             <summary>
             Wraps the provided <paramref name="handler"/> with another handler which will execute the
             <see cref="M:MessageBus.IMessageEventHandler`1.Handle(`0)"/> within its own task. This
-            means that multiple threads will execute the wrapped handler simultaniously. Only use this
+            means that multiple threads will execute the wrapped handler simultaneously. Only use this
             method if you are sure that the wrapped handler is thread safe and stateless.
             </summary>
             <remarks>If the provided <paramref name="handler"/> implements <see cref="T:MessageBus.ISubscriptionAwareHandler"/>, the result
@@ -776,7 +776,7 @@
         </member>
         <member name="T:MessageBus.TopicNameCache">
             <summary>
-            Uses the provided unlying provider to read the topic names for a given
+            Uses the provided underlying provider to read the topic names for a given
             type. The result is cached. This class is thread safe.
             </summary>
         </member>

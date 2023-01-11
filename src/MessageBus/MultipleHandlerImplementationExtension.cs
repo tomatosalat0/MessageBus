@@ -16,7 +16,7 @@ namespace MessageBus
         /// <see cref="IMessageBusHandler.RegisterEventHandler{TEvent}(IAsyncMessageEventHandler{TEvent})"/>.
         /// </para>
         /// </summary>
-        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
         /// this method will get rolled back.</remarks>
         /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -43,7 +43,7 @@ namespace MessageBus
         /// details.
         /// </para>
         /// </summary>
-        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
         /// this method will get rolled back.</remarks>
         /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -92,7 +92,7 @@ namespace MessageBus
         /// returned by <see cref="IMessageBusHandler.RegisterCommandHandler{TEvent}(IMessageCommandHandler{TEvent})"/> or
         /// <see cref="IMessageBusHandler.RegisterCommandHandler{TEvent}(IAsyncMessageCommandHandler{TEvent})"/>.
         /// </summary>
-        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
         /// this method will get rolled back.</remarks>
         /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -123,7 +123,7 @@ namespace MessageBus
         /// returned by <see cref="IMessageBusHandler.RegisterQueryHandler{TQuery, TQueryResult}(IMessageQueryHandler{TQuery, TQueryResult})"/> or
         /// <see cref="IMessageBusHandler.RegisterQueryHandler{TQuery, TQueryResult}(IAsyncMessageQueryHandler{TQuery, TQueryResult})"/>.
         /// </summary>
-        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
         /// this method will get rolled back.</remarks>
         /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>
@@ -154,7 +154,7 @@ namespace MessageBus
         /// returned by <see cref="IMessageBusHandler.RegisterRpcHandler{TRpc, TRpcResult}(IMessageRpcHandler{TRpc, TRpcResult})"/> or
         /// <see cref="IMessageBusHandler.RegisterRpcHandler{TRpc, TRpcResult}(IAsyncMessageRpcHandler{TRpc, TRpcResult})"/>.
         /// </summary>
-        /// <remarks>If an exception during the regiration process happens, all previously generated subscriptions which happened within
+        /// <remarks>If an exception during the registration process happens, all previously generated subscriptions which happened within
         /// this method will get rolled back.</remarks>
         /// <exception cref="ArgumentException">Is thrown if the registration methods could not be found within <paramref name="messageBus"/>.</exception>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="handler"/> is null.</exception>

@@ -21,7 +21,7 @@ namespace MessageBus.Decorations.Versioning
                 if (isNewVersion)
                 {
                     _previousVersions.Add(versionId);
-                    EnsureRememberdVersionCountLimit();
+                    EnsureRememberedVersionCountLimit();
                     return true;
                 }
 
@@ -40,7 +40,7 @@ namespace MessageBus.Decorations.Versioning
             }
         }
 
-        private void EnsureRememberdVersionCountLimit()
+        private void EnsureRememberedVersionCountLimit()
         {
             while (_previousVersions.Count > MAX_VERSIONS_TO_KEEP)
                 _previousVersions.RemoveAt(0);

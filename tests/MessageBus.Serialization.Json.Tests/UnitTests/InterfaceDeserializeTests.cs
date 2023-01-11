@@ -202,7 +202,7 @@ namespace MessageBus.Serialization.Json.Tests.UnitTests
         }
 
         [TestMethod]
-        public void InterfaceWithInhertanceSerializeAndDeserializeSupport()
+        public void InterfaceWithInheritanceSerializeAndDeserializeSupport()
         {
             IMessageSerializer serializer = new JsonMessageSerializer()
                 .WithInterfaceDeserializer();

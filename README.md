@@ -276,7 +276,7 @@ The `IMessageBus` interfaces separates messages into four categories:
 * Queries
 * RPC
 
-Technically these four types can be splitted into two categories:
+Technically these four types can be split into two categories:
 * Events and Commands will not return anything
 * Queries and RPC have a return value
 

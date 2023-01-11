@@ -23,7 +23,7 @@ namespace MessageBus.Examples.MessageBus
              second message won't get forward to that handler.
 
              Notice: the order of first two message might be flipped because each event handler gets
-             called simulatinously and independently
+             called simultaneously and independently
              */
             await RunWithTemporaryHandler(system);
 

@@ -38,7 +38,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Channels
         }
 
         [TestMethod]
-        public async Task UnubscribedChannelWontCreateWorkAfterPublish()
+        public async Task UnsubscribedChannelWontCreateWorkAfterPublish()
         {
             EventsChannel channel = new EventsChannel(() => { });
             await channel.Publish(new object());
@@ -233,7 +233,7 @@ namespace MessageBus.Messaging.Tests.UnitTests.Channels
         }
 
         [TestMethod]
-        public void EventsChannelFiresLastSubscriptionIfSubscriped()
+        public void EventsChannelFiresLastSubscriptionIfSubscribed()
         {
             int callCount = 0;
             EventsChannel channel = new EventsChannel(() => { });

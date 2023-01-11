@@ -6,7 +6,7 @@ namespace MessageBus
     {
         /// <summary>
         /// Gets called when an exception occured within any handler. The parameter <paramref name="messageId"/>
-        /// is the correlation id of the message which got procssed. <paramref name="message"/> is the
+        /// is the correlation id of the message which got processed. <paramref name="message"/> is the
         /// actual message which got processed. Normally this can be something implementing <see cref="IMessageQuery{TQueryResult}"/>,
         /// <see cref="IMessageEvent"/> or <see cref="IMessageCommand"/>. <paramref name="exception"/> is the exception
         /// which didn't get caught within the handler itself.

@@ -58,7 +58,7 @@ namespace MessageBus
         /// provided <paramref name="rpcParameter"/> is available, this method will never return.
         /// </summary>
         /// <remarks>While a RPC might look identical to a query, it is semantically different. A query should not change any
-        /// state while an RPC doesn't have this constraint. However, if you want to go with asynchronious communication,
+        /// state while an RPC doesn't have this constraint. However, if you want to go with asynchronous communication,
         /// you should avoid RPC calls and replace them with Commands.</remarks>
         /// <exception cref="OperationCanceledException">Is thrown if the provided <paramref name="cancellationToken"/>
         /// is cancelled.</exception>

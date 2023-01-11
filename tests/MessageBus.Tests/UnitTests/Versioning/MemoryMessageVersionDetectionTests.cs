@@ -33,7 +33,7 @@ namespace MessageBus.Tests.UnitTests.Versioning
         }
 
         [TestMethod]
-        public void HighestVersionWillGetRemebered()
+        public void HighestVersionWillGetRemembered()
         {
             MemoryMessageVersionDetection<int> detector = new MemoryMessageVersionDetection<int>();
 

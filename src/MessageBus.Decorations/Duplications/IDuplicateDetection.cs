@@ -3,7 +3,7 @@
     public interface IDuplicateDetection
     {
         /// <summary>
-        /// Gets a <see cref="MessageId"/> from an incomming message. This id
+        /// Gets a <see cref="MessageId"/> from an incoming message. This id
         /// gets stored. Returns true if the <paramref name="messageId"/>
         /// has not been seen before, otherwise false.
         /// </summary>

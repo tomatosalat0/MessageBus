@@ -22,7 +22,7 @@ namespace MessageBus.Examples.SharedMessageInterface
 
         While the class structure might be a bit confusing in the first place (nested private classes),
         it is only there to demonstrate that each module only knows about the events and queries - not 
-        about any implemention or any other module within the system. 
+        about any implementation or any other module within the system. 
 
         This example uses message serialization. While the broker is still the InProcess broker, it could 
         get replaced by an external system without and adjustments within any module or interface. After that,
@@ -42,7 +42,7 @@ namespace MessageBus.Examples.SharedMessageInterface
             SystemA.ICallable systemA = SystemA.Register(messageBus);
             SystemB.Register(messageBus);
 
-            await systemA.PerfomSomeWork();
+            await systemA.PerformSomeWork();
 
             // because the events might not get be processed yet, just wait 
             // a tiny little bit. 

@@ -13,7 +13,7 @@ namespace MessageBus.Examples.CrossModulesCommunication.ModuleA
             _messageBus = messageBus;
         }
 
-        public Task PerfomSomeWork()
+        public Task PerformSomeWork()
         {
             // actually do something
             _someState = DateTime.Now.ToString("o");

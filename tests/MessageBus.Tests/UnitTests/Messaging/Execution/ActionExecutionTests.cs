@@ -12,26 +12,26 @@ namespace MessageBus.Messaging.Tests.UnitTests.Execution
         [TestMethod]
         public void TryWaitForWorkReturnsFalseWhenEmptyExecutable()
         {
-            ActionExecution executer = new ActionExecution(new EmptyExecutable());
-            Assert.IsFalse(executer.HasWork());
-            Assert.IsFalse(executer.TryWaitForWork(TimeSpan.FromSeconds(1), CancellationToken.None, out _));
+            ActionExecution executor = new ActionExecution(new EmptyExecutable());
+            Assert.IsFalse(executor.HasWork());
+            Assert.IsFalse(executor.TryWaitForWork(TimeSpan.FromSeconds(1), CancellationToken.None, out _));
         }
 
         [TestMethod]
         public void TryWaitForWorkReturnsFalseWhenCompletedExecutable()
         {
-            ActionExecution executer = new ActionExecution(new CompletedExecutable());
-            Assert.IsFalse(executer.HasWork());
-            Assert.IsFalse(executer.TryWaitForWork(TimeSpan.FromSeconds(1), CancellationToken.None, out _));
+            ActionExecution executor = new ActionExecution(new CompletedExecutable());
+            Assert.IsFalse(executor.HasWork());
+            Assert.IsFalse(executor.TryWaitForWork(TimeSpan.FromSeconds(1), CancellationToken.None, out _));
         }
 
         [TestMethod]
         public void ActionCollectorWillExecuteWork()
         {
             NeverEmptyExecutable collectable = new NeverEmptyExecutable();
-            ActionExecution executer = new ActionExecution(collectable);
-            Assert.IsTrue(executer.HasWork());
-            Assert.IsTrue(executer.TryWaitForWork(TimeSpan.FromSeconds(1), CancellationToken.None, out var workToExecute));
+            ActionExecution executor = new ActionExecution(collectable);
+            Assert.IsTrue(executor.HasWork());
+            Assert.IsTrue(executor.TryWaitForWork(TimeSpan.FromSeconds(1), CancellationToken.None, out var workToExecute));
             Assert.IsNotNull(workToExecute);
             workToExecute.Execute();
             Assert.AreEqual(1, collectable.Executions);
