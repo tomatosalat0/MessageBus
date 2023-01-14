@@ -20,7 +20,7 @@ namespace MessageBus.Broker.RabbitMq.Tests.Performance
                 HostName = "localhost"
             };
             return new RabbitMqBroker(connection)
-                .UseMessageSerialization(new JsonMessageSerializer().WithInterfaceDeserializer());
+                .UseMessageSerialization(new JsonMemoryMessageSerializer().WithInterfaceDeserializer());
         }
 
         [TestMethod]

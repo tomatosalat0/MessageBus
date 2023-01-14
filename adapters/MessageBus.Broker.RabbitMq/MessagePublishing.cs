@@ -17,19 +17,36 @@ namespace MessageBus.Broker.RabbitMq
             _channel = connection.CreateModel();
         }
 
-        public async Task Publish<T>(string exchange, TopicName topic, T payload)
+        public async Task PublishByteArray(string exchange, TopicName topic, byte[] payload)
         {
             await _channelLock.WaitAsync();
             try
             {
-                byte[] data = (byte[])(object)payload!;
-                ReadOnlyMemory<byte> buffer = new ReadOnlyMemory<byte>(data);
+                ReadOnlyMemory<byte> buffer = new ReadOnlyMemory<byte>(payload);
 
                 _channel.BasicPublish(
                     exchange: exchange,
                     routingKey: topic.ToString(),
                     basicProperties: null,
                     body: buffer
+                );
+            }
+            finally
+            {
+                _channelLock.Release();
+            }
+        }
+
+        public async Task PublishReadOnlyMemory(string exchange, TopicName topic, ReadOnlyMemory<byte> payload)
+        {
+            await _channelLock.WaitAsync();
+            try
+            {
+                _channel.BasicPublish(
+                    exchange: exchange,
+                    routingKey: topic.ToString(),
+                    basicProperties: null,
+                    body: payload
                 );
             }
             finally

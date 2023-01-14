@@ -6,5 +6,10 @@
         {
             return new InterfaceJsonMessageSerializer(serializer, options ?? new TypeCreationOptions());
         }
+
+        public static IMessageMemorySerializer WithInterfaceDeserializer(this ITypeMessageMemorySerializer serializer, TypeCreationOptions? options = null)
+        {
+            return new InterfaceJsonMemoryMessageSerializer(serializer, options ?? new TypeCreationOptions());
+        }
     }
 }

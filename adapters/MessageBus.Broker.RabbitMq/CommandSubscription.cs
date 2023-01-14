@@ -6,9 +6,8 @@ using RabbitMQ.Client;
 
 namespace MessageBus.Broker.RabbitMq
 {
-    internal class CommandSubscription : ISubscribable, IDisposable
+    internal sealed class CommandSubscription : ISubscribable, IDisposable
     {
-        private readonly IConnection _connection;
         private readonly IModel _channel;
         private readonly TopicName _topic;
         private bool _disposedValue;
@@ -16,8 +15,7 @@ namespace MessageBus.Broker.RabbitMq
         public CommandSubscription(TopicName topic, IConnection connection, ISubscriptionOptions? options)
         {
             _topic = topic;
-            _connection = connection;
-            _channel = _connection.CreateModel();
+            _channel = connection.CreateModel();
             SetupChannel(options);
         }
 
@@ -57,11 +55,19 @@ namespace MessageBus.Broker.RabbitMq
 
         public IDisposable Subscribe<T>(Action<IMessage<T>> messageHandler) where T : notnull
         {
-            if (typeof(T) != typeof(byte[]))
-                throw new NotSupportedException($"The payload must be of the type byte[], but got '{typeof(T)}'");
+            Type messageType = typeof(T);
+            if (messageType == typeof(byte[]))
+                return ExecuteSubscribe(() => CreateManualAckByteArrayHandler(_channel, messageHandler));
+            if (messageType == typeof(ReadOnlyMemory<byte>))
+                return ExecuteSubscribe(() => CreateManualAckMemoryHandler(_channel, messageHandler));
+            
+            throw new NotSupportedException($"The payload must be of the type byte[] or ReadOnlyMemory<byte>, but got '{typeof(T)}'");
+        }
 
+        private IDisposable ExecuteSubscribe(Func<EventHandler<BasicDeliverEventArgs>> createHandler)
+        {
             EventingBasicConsumer consumer = new EventingBasicConsumer(_channel);
-            EventHandler<BasicDeliverEventArgs> handler = CreateManualAckHandler<T>(_channel, messageHandler);
+            EventHandler<BasicDeliverEventArgs> handler = createHandler();
             consumer.Received += handler;
 
             _channel.BasicConsume(
@@ -78,11 +84,20 @@ namespace MessageBus.Broker.RabbitMq
             throw new NotSupportedException();
         }
 
-        private static EventHandler<BasicDeliverEventArgs> CreateManualAckHandler<T>(IModel channel, Action<IMessage<T>> messageHandler)
+        private static EventHandler<BasicDeliverEventArgs> CreateManualAckMemoryHandler<T>(IModel channel, Action<IMessage<T>> messageHandler)
         {
-            return (model, ea) =>
+            return (_, ea) =>
             {
-                RabbitMQMessage<T> message = new RabbitMQMessage<T>(ea, channel);
+                RabbitMQMemoryMessage<T> message = new RabbitMQMemoryMessage<T>(ea, channel);
+                messageHandler(message);
+            };
+        }
+
+        private static EventHandler<BasicDeliverEventArgs> CreateManualAckByteArrayHandler<T>(IModel channel, Action<IMessage<T>> messageHandler)
+        {
+            return (_, ea) =>
+            {
+                RabbitMQByteArrayMessage<T> message = new RabbitMQByteArrayMessage<T>(ea, channel);
                 messageHandler(message);
             };
         }
@@ -91,6 +106,7 @@ namespace MessageBus.Broker.RabbitMq
         {
             private readonly EventHandler<BasicDeliverEventArgs> _handler;
             private readonly EventingBasicConsumer _consumer;
+            private bool _disposedValue;
 
             public EventHandlerDisposable(EventingBasicConsumer consumer, EventHandler<BasicDeliverEventArgs> handler)
             {
@@ -98,17 +114,15 @@ namespace MessageBus.Broker.RabbitMq
                 _handler = handler;
             }
 
-            private bool disposedValue;
-
             private void Dispose(bool disposing)
             {
-                if (!disposedValue)
+                if (!_disposedValue)
                 {
                     if (disposing)
                     {
                         _consumer.Received -= _handler;
                     }
-                    disposedValue = true;
+                    _disposedValue = true;
                 }
             }
 
@@ -120,18 +134,16 @@ namespace MessageBus.Broker.RabbitMq
             }
         }
 
-        private class RabbitMQMessage<T> : IMessage<T>, IMessageSupportsRejection
+        private abstract class RabbitMQMessage : IMessageSupportsRejection
         {
-            private readonly BasicDeliverEventArgs _args;
+            protected readonly BasicDeliverEventArgs _args;
             private readonly IModel _channel;
 
-            public RabbitMQMessage(BasicDeliverEventArgs args, IModel channel)
+            protected RabbitMQMessage(BasicDeliverEventArgs args, IModel channel)
             {
                 _args = args;
                 _channel = channel;
             }
-
-            public T Payload => (T)(object)(_args.Body.ToArray());
 
             public MessageState State { get; private set; }
 
@@ -163,7 +175,25 @@ namespace MessageBus.Broker.RabbitMq
             }
         }
 
-        protected virtual void Dispose(bool disposing)
+        private sealed class RabbitMQByteArrayMessage<T> : RabbitMQMessage, IMessage<T>
+        {
+            public RabbitMQByteArrayMessage(BasicDeliverEventArgs args, IModel channel) : base(args, channel)
+            {
+            }
+
+            public T Payload => (T)(object)(_args.Body.ToArray());
+        }
+
+        private sealed class RabbitMQMemoryMessage<T> : RabbitMQMessage, IMessage<T>
+        {
+            public RabbitMQMemoryMessage(BasicDeliverEventArgs args, IModel channel) : base(args, channel)
+            {
+            }
+
+            public T Payload => (T)(object)(_args.Body);
+        }
+
+        private void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {

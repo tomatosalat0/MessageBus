@@ -43,23 +43,49 @@ namespace MessageBus.Broker.RabbitMq
 
         public Task PublishEvent<T>(T message, IReadOnlyList<TopicName> topics)
         {
-            if (typeof(T) != typeof(byte[]))
-                throw new NotSupportedException($"The payload must be of the type byte[], but got '{typeof(T)}'");
-
             string exchange = "amq.direct";
-            return Task.WhenAll(
-                topics.Select(topic => _eventPublisher.Publish(exchange, topic, message))    
-            );
+            switch (message)
+            {
+                case ReadOnlyMemory<byte> readOnlyMemory:
+                    return PublishReadOnlyMemory(readOnlyMemory, topics, exchange, _eventPublisher);
+                case byte[] byteArray:
+                    return PublishByteArray(byteArray, topics, exchange, _eventPublisher);
+                default:
+                    throw new NotSupportedException($"The payload must be of the type byte[] or ReadOnlyMemory<byte>, but got '{typeof(T)}'");
+            }
         }
 
         public Task PublishCommand<T>(T message, IReadOnlyList<TopicName> topics)
         {
-            if (typeof(T) != typeof(byte[]))
-                throw new NotSupportedException($"The payload must be of the type byte[], but got '{typeof(T)}'");
-
             string exchange = string.Empty;
+            switch (message)
+            {
+                case ReadOnlyMemory<byte> readOnlyMemory:
+                    return PublishReadOnlyMemory(readOnlyMemory, topics, exchange, _commandPublisher);
+                case byte[] byteArray:
+                    return PublishByteArray(byteArray, topics, exchange, _commandPublisher);
+                default:
+                    throw new NotSupportedException($"The payload must be of the type byte[] or ReadOnlyMemory<byte>, but got '{typeof(T)}'");
+            }
+        }
+
+        private static Task PublishReadOnlyMemory(ReadOnlyMemory<byte> payload, IReadOnlyList<TopicName> topics, string exchange, MessagePublishing publisher)
+        {
+            if (topics.Count == 1)
+                return publisher.PublishReadOnlyMemory(exchange, topics[0], payload);
+            
             return Task.WhenAll(
-                topics.Select(topic => _commandPublisher.Publish(exchange, topic, message))
+                topics.Select(topic => publisher.PublishReadOnlyMemory(exchange, topic, payload))    
+            );
+        }
+
+        private static Task PublishByteArray(byte[] payload, IReadOnlyList<TopicName> topics, string exchange, MessagePublishing publisher)
+        {
+            if (topics.Count == 1)
+                return publisher.PublishByteArray(exchange, topics[0], payload);
+            
+            return Task.WhenAll(
+                topics.Select(topic => publisher.PublishByteArray(exchange, topic, payload))    
             );
         }
 
